@@ -9,7 +9,11 @@ import sys
 import zipfile
 from pathlib import Path
 
-from pack import pack_files
+try:
+    from .pack import pack_files
+except ImportError:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from pack import pack_files
 
 ROOT = Path(__file__).resolve().parents[1]
 SLUGS = (

@@ -47,7 +47,7 @@ class ArtifactTests(unittest.TestCase):
             (folder / "SKILL.md").write_text(f"---\nname: {slug}\ndescription: "
                 "Use this fixture to exercise a realistic public skill artifact validation workflow.\n---\n"
                 "# Fixture\n")
-            (folder / "LICENSE").write_text("Fixture MIT license\n")
+            (folder / "LICENSE.txt").write_text("Fixture MIT license\n")
             fields = {field: "Fixture content" for field in check.FIELDS}
             fields.update(Name="Fixture", Tags="ai-agents, testing")
             fields["Repo link"] = f"https://github.com/aunysillyme-dev/aunx-skills/tree/main/skills/{slug}"
@@ -86,7 +86,7 @@ class ArtifactTests(unittest.TestCase):
     def test_pack_has_installable_root_and_excludes_marketplace_data(self):
         folder = self.root / "skills" / check.SLUGS[0]
         (folder / "scripts").mkdir()
-        helper = folder / "scripts" / "aunx-helper"
+        helper = folder / "scripts" / "aunx-helper.py"
         helper.write_text("#!/usr/bin/env python3\nprint('fixture')\n")
         helper.chmod(0o755)
         with patch.object(sys, "argv", ["pack.py", "--version", "1.2.3"]):
@@ -96,9 +96,18 @@ class ArtifactTests(unittest.TestCase):
         for archive_path in archives:
             with zipfile.ZipFile(archive_path) as archive:
                 slug = archive_path.name.removesuffix("-1.2.3.zip")
-                self.assertTrue({slug + "/SKILL.md", slug + "/LICENSE"} <= set(archive.namelist()))
+                self.assertTrue({slug + "/SKILL.md", slug + "/LICENSE.txt"} <= set(archive.namelist()))
                 self.assertTrue(all(name.startswith(slug + "/") for name in archive.namelist()))
                 self.assertFalse(any("listing.md" in name or "demos/" in name for name in archive.namelist()))
+
+    def test_pack_rejects_extensionless_shipped_file(self):
+        folder = self.root / "skills" / check.SLUGS[0]
+        (folder / "scripts").mkdir()
+        helper = folder / "scripts" / "aunx-helper"
+        helper.write_text("#!/usr/bin/env python3\nprint('fixture')\n")
+        with patch.object(sys, "argv", ["pack.py", "--version", "1.2.3"]):
+            with self.assertRaisesRegex(ValueError, "shipped file must have an extension"):
+                pack.main()
 
 
 if __name__ == "__main__":
