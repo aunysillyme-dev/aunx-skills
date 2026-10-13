@@ -8,7 +8,7 @@ Help your agent preserve the difference between a passing idea, a preference, a 
 
 ## Price
 
-$3 individually. Included in the $7.99 ten-skill bundle.
+$3 individually. Also in the $7.99 aunx bundle of all six paid skills.
 
 ## Full description
 
@@ -33,7 +33,7 @@ Classify nine invented statements covering the four levels, a one-off table requ
 
 ## Demo result
 
-The drafting subagent applied the finished skill and produced a classification table. "I like short paragraphs" became a preference; "I always outline" remained a practice; "never include customer email addresses" remained a rule. The table request stayed scoped to one answer. "100x easier" stayed rhetorical, and the headline-only correction preserved the existing privacy instruction. Two candidate memory entries were proposed; none were saved. Actual output: [result.md](../../demos/instruction-weight/result.md).
+Applied to nine invented statements, the skill produced a classification table. "I like short paragraphs" became a preference; "I always outline" remained a practice; "never include customer email addresses" remained a rule. The table request stayed scoped to one answer. "100x easier" stayed rhetorical, and the headline-only correction preserved the existing privacy instruction. Two candidate memory entries were proposed; none were saved. Actual output: [result.md](../../demos/instruction-weight/result.md).
 
 ## FAQ
 

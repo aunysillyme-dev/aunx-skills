@@ -2,7 +2,7 @@
 
 Ten standalone agent skills for things agents quietly get wrong: lost command output, unchecked numbers, incomplete renames, premature failure claims, and lessons saved as rules too soon.
 
-Made by Auny LLC. Four packs are free. Six have individual marketplace prices. The complete ten-pack bundle is **$7.99** on Agensi when published. This public repository contains the skill instructions and source under the [MIT license](LICENSE); a marketplace purchase does not grant exclusive access or change those license rights.
+Made by Auny LLC. Four packs are free. Six have individual marketplace prices. The bundle of all six paid skills is **$7.99** on Agensi when published. This public repository contains the skill instructions and source under the [MIT license](LICENSE); a marketplace purchase does not grant exclusive access or change those license rights.
 
 ## Choose a skill
 
@@ -19,8 +19,7 @@ Made by Auny LLC. Four packs are free. Six have individual marketplace prices. T
 | [Client Work to Template](skills/client-work-to-template/SKILL.md) | Extract a reusable method and check it for client-specific details. | $5 |
 | [Retro to Rules](skills/retro-to-rules/SKILL.md) | Turn repeated corrections into numbered proposals for user approval. | $5 |
 
-[Agensi creators](https://www.agensi.io/creators)
-<!-- TODO: Add the exact Agensi creator profile URL once confirmed. -->
+[Agensi creators](https://agensi.io/creators/aunysillyme)
 
 ## Install a pack
 
@@ -29,9 +28,9 @@ Copy one folder from `skills/` into your agent's skills directory. Keep its `SKI
 | Agent | User directory | Project directory |
 |---|---|---|
 | Claude Code | `~/.claude/skills/` | `.claude/skills/` |
-| Codex CLI | `~/.agents/skills/` (current shared discovery); `~/.codex/skills/` for installations using CODEX_HOME | `.agents/skills/` |
-| Cursor | `~/.cursor/skills/` | `.cursor/skills/` |
-| Gemini CLI | `~/.gemini/skills/` | `.gemini/skills/` |
+| Codex CLI | see your agent's skills documentation | `.agents/skills/` |
+| Cursor | see your agent's skills documentation | see your agent's skills documentation |
+| Gemini CLI | see your agent's skills documentation | see your agent's skills documentation |
 
 Directory discovery varies by installed agent version and configuration. If your version does not discover a pack automatically, ask the agent to read that pack's `SKILL.md` directly. The instructions work with any agent that can read Markdown; shell helpers and network tools require the separate capabilities stated in each pack.
 
@@ -77,9 +76,9 @@ They use plain Markdown with YAML `name` and `description` fields. Those agents 
 
 Full Output Keeper, Number Guard, X Spaces Transcriber, and Docs Fetch Ladder have free marketplace listings. All repository source is public under MIT.
 
-### How much is the complete skill bundle?
+### How much is the paid skill bundle?
 
-The marketplace bundle price is $7.99 for all ten packs. Publishing and checkout availability are separate from this source repository.
+The marketplace bundle price is $7.99 for all six paid packs. Publishing and checkout availability are separate from this source repository.
 
 ### Can I use a skill without installing an MCP server?
 

@@ -8,7 +8,7 @@ Turn completed client work into a reusable method and blank template, with an ex
 
 ## Price
 
-$5 standalone; included in the $7.99 ten-skill bundle.
+$5 standalone. Also in the $7.99 aunx bundle of all six paid skills.
 
 ## Full description
 

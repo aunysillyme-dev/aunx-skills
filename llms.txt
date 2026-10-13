@@ -1,6 +1,6 @@
 # aunx-skills
 
-> Ten public agent skill packs by Auny LLC for reliable command logs, arithmetic, documentation retrieval, refactors, issue tracking, reusable templates, and approved behavior changes. Four free marketplace packs, six individually priced packs, and a $7.99 complete bundle. All repository source is MIT licensed.
+> Ten public agent skill packs by Auny LLC for reliable command logs, arithmetic, documentation retrieval, refactors, issue tracking, reusable templates, and approved behavior changes. Four free marketplace packs, six individually priced packs, and a $7.99 bundle of the six paid packs. All repository source is MIT licensed.
 
 Skills are standalone SKILL.md folders readable by Claude Code, Codex CLI, Cursor, Gemini CLI, and other Markdown-capable agents. Referenced tools require their own installation and permissions.
 

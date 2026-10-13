@@ -8,7 +8,7 @@ Give agents a clear way to verify missing results, pending jobs, and skipped che
 
 ## Price
 
-$1 standalone; included in the $7.99 ten-skill bundle.
+$1 standalone. Also in the $7.99 aunx bundle of all six paid skills.
 
 ## Full description
 

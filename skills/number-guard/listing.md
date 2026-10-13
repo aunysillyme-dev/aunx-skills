@@ -8,7 +8,7 @@ Give your agent a clear method for tool-calculated numbers, exact results, and e
 
 ## Price
 
-Free ($0). Also included in the $7.99 ten-skill bundle.
+Free ($0). Not part of the bundle.
 
 ## Full description
 

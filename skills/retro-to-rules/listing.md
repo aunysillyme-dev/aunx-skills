@@ -8,7 +8,7 @@ Turn recurring feedback into evidenced proposals, then save the changes you appr
 
 ## Price
 
-$5 individually; included in the $7.99 ten-skill bundle.
+$5 individually. Also in the $7.99 aunx bundle of all six paid skills.
 
 ## Full description
 

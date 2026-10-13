@@ -1,6 +1,6 @@
 # Instruction Weight: actual demo result
 
-This result was produced by the drafting subagent after reading the completed SKILL.md and applying it to request.json. All statements and project context are synthetic. The request authorizes interpretation only.
+Applied to nine invented statements, the skill produced this result after reading the completed SKILL.md and applying it to request.json. All statements and project context are synthetic. The request authorizes interpretation only.
 
 | Statement | Rung | Scope | Basis | Immediate action | Persistence action |
 |---|---|---|---|---|---|

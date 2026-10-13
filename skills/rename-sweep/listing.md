@@ -8,7 +8,7 @@ Map a rename across code, docs, configuration, tests, and project notes, then ch
 
 ## Price
 
-$3 standalone. Included in the $7.99 ten-skill bundle.
+$3 standalone. Also in the $7.99 aunx bundle of all six paid skills.
 
 ## Full description
 

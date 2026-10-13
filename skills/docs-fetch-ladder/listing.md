@@ -8,7 +8,7 @@ Give your agent a clear path from documentation indexes to readable source pages
 
 ## Price
 
-Free ($0). Also included in the ten-skill bundle priced at $7.99.
+Free ($0). Not part of the bundle.
 
 ## Full description
 

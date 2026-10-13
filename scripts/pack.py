@@ -2,6 +2,7 @@
 """Package one installable zip per skill using only the Python standard library."""
 import argparse
 import re
+import stat
 import sys
 import zipfile
 from pathlib import Path
@@ -35,7 +36,7 @@ def main():
                 member.date_time = (2026, 1, 1, 0, 0, 0)
                 member.compress_type = zipfile.ZIP_DEFLATED
                 mode = 0o755 if file.stat().st_mode & 0o111 else 0o644
-                member.external_attr = mode << 16
+                member.external_attr = (stat.S_IFREG | mode) << 16
                 archive.writestr(member, file.read_bytes())
         print(path.relative_to(ROOT))
     print(f"Packaged {len(folders)} skills at version {args.version}")

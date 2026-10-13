@@ -26,36 +26,22 @@ def ident(result):
 
 
 def main():
-    cache = HERE / "cache"
-    run = invoke(cache, "--head", "3", "--", sys.executable,
-                 "demos/full-output-keeper/diagnostic.py")
-    assert run.returncode == 7 and run.stderr == b"", (run.returncode, run.stderr)
-    saved_id = ident(run)
-    full = invoke(cache, "read", saved_id)
-    search = invoke(cache, "read", saved_id, "--grep", "ERROR")
-    sliced = invoke(cache, "read", saved_id, "--lines", "11:13")
-    expected = subprocess.run([sys.executable, "demos/full-output-keeper/diagnostic.py"],
-                              cwd=ROOT, stdout=subprocess.PIPE).stdout
-    assert full.returncode == 0 and full.stdout == expected
-    assert search.stdout == b"12:ERROR missing icon: checkout.svg\n"
-    assert sliced.stdout == b"asset 10: checked\nERROR missing icon: checkout.svg\nasset 12: checked\n"
-    (HERE / "short-view.txt").write_bytes(run.stdout)
-    (HERE / "full-output.txt").write_bytes(full.stdout)
-    (HERE / "error-match.txt").write_bytes(search.stdout)
-    (HERE / "range.txt").write_bytes(sliced.stdout)
-    (HERE / "result.md").write_text(
-        "# Actual demo result\n\n"
-        "Command: `AUNX_KEEP_CACHE=demos/full-output-keeper/cache python3 "
-        "skills/full-output-keeper/scripts/aunx-keep --head 3 -- python3 "
-        "demos/full-output-keeper/diagnostic.py`\n\n"
-        f"Command exit: **{run.returncode}**. The head view showed lines 1-3 of 14. "
-        f"Retrieval id: `{saved_id}`. Full retrieval matched all original bytes.\n\n"
-        "Search returned `12:ERROR missing icon: checkout.svg`. The hidden error is on original "
-        "line 12. `--lines 11:13` returned the adjacent context.\n\n"
-        "Artifacts: `short-view.txt`, `full-output.txt`, `error-match.txt`, `range.txt`.\n",
-        encoding="utf-8")
+    with tempfile.TemporaryDirectory(prefix="aunx-keep-demo-") as demo_dir:
+        cache = Path(demo_dir) / "cache"
+        run = invoke(cache, "--head", "3", "--", sys.executable,
+                     "demos/full-output-keeper/diagnostic.py")
+        assert run.returncode == 7 and run.stderr == b"", (run.returncode, run.stderr)
+        saved_id = ident(run)
+        full = invoke(cache, "read", saved_id)
+        search = invoke(cache, "read", saved_id, "--grep", "ERROR")
+        sliced = invoke(cache, "read", saved_id, "--lines", "11:13")
+        expected = subprocess.run([sys.executable, "demos/full-output-keeper/diagnostic.py"],
+                                  cwd=ROOT, stdout=subprocess.PIPE).stdout
+        assert full.returncode == 0 and full.stdout == expected
+        assert search.stdout == b"12:ERROR missing icon: checkout.svg\n"
+        assert sliced.stdout == b"asset 10: checked\nERROR missing icon: checkout.svg\nasset 12: checked\n"
 
-    with tempfile.TemporaryDirectory(prefix="aunx-check-", dir=HERE) as folder:
+    with tempfile.TemporaryDirectory(prefix="aunx-check-") as folder:
         cache = Path(folder) / "cache"
         binary = invoke(cache, "--tail", "1", "--max-bytes", "6", "--", sys.executable,
                         "-c", "import os; os.write(1, b'first\\nlast\\xff'); raise SystemExit(9)")

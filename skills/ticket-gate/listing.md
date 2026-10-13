@@ -8,7 +8,7 @@ Turn findings into startable, deduplicated issues and verify the evidence before
 
 ## Price
 
-$3 individual pack. Included in the ten-pack bundle at $7.99.
+$3 individual pack. Also in the $7.99 aunx bundle of all six paid skills.
 
 ## Full description
 

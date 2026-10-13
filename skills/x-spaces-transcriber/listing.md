@@ -8,7 +8,7 @@ Teach your agent to turn a recorded X Space into a timed transcript with observe
 
 ## Price
 
-Free ($0). Included in the $7.99 ten-skill bundle.
+Free ($0). Not part of the bundle.
 
 ## Full description
 
