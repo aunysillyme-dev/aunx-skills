@@ -1,0 +1,38 @@
+{
+  "scope": "offline install and help only",
+  "results": [
+    {
+      "stage": "venv",
+      "exit_code": 0,
+      "log": "venv.txt"
+    },
+    {
+      "stage": "install",
+      "exit_code": 2,
+      "log": "install.txt"
+    },
+    {
+      "stage": "help",
+      "exit_code": 1,
+      "log": "help.txt"
+    }
+  ],
+  "transcription_tested": false,
+  "retry_results": [
+    {
+      "stage": "venv-retry",
+      "exit_code": 0,
+      "log": "venv-retry.txt"
+    },
+    {
+      "stage": "install-retry",
+      "exit_code": 0,
+      "log": "install-retry.txt"
+    },
+    {
+      "stage": "help-retry",
+      "exit_code": 0,
+      "log": "help-retry.txt"
+    }
+  ]
+}

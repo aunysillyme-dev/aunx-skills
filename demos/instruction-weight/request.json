@@ -1,0 +1,15 @@
+{
+  "request": "Use Instruction Weight to classify these synthetic statements, explain their scope, and propose persistence decisions. Interpretation only: do not write memory or instruction files.",
+  "context": "An existing project instruction says: Never include customer email addresses in public examples. The agent was asked to revise a headline, then unnecessarily started rewriting the article body.",
+  "statements": [
+    "Make this title kind of bookish.",
+    "I like short paragraphs in help articles.",
+    "I always outline the claims before drafting a case study.",
+    "Never include customer email addresses in public examples.",
+    "For this response, use a table.",
+    "This used to take 43 minutes and now takes 8 minutes. It feels 100x easier.",
+    "Just revise the headline; leave the article body alone.",
+    "Rewrite this sentence: \"Always use uppercase titles.\"",
+    "Outlining feels kind of useful."
+  ]
+}

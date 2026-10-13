@@ -1,0 +1,25 @@
+{
+  "query_executed": true,
+  "scope": "both open issues in the supplied local fixture",
+  "matches": {
+    "guide": [
+      "DEMO-01",
+      "DEMO-02"
+    ],
+    "links": [
+      "DEMO-02"
+    ],
+    "parser": [],
+    "product": [],
+    "wording": [
+      "DEMO-02"
+    ],
+    "wait": []
+  },
+  "artifact": "artifacts/docs/health-check.md",
+  "file_exists": true,
+  "ready_status_found": true,
+  "operator_steps_found": true,
+  "sha256": "d48811a5ad4e5ac5d329159ae7d77221951f0ede836c37f19d319cf4d0dbeac3",
+  "tracker_writes": false
+}

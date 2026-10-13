@@ -1,0 +1,11 @@
+Synthetic invoice, USD; discount applied before tax
+Subtotal: 59.85
+Discount: 7.1820
+Tax base: 52.6680
+Tax: 4.34511000
+Exact total: 57.01311000 (5701311/100000)
+Rounded bill: 57.01 (ROUND_HALF_UP, final total only)
+Exact share of unrounded total: 14.25327750 (5701311/400000)
+Exact share of rounded bill: 14.2525 (5701/400)
+Cent allocations: 14.26, 14.25, 14.25, 14.25
+Allocation total: 57.01

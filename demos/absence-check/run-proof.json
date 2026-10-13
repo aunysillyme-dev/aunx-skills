@@ -1,0 +1,12 @@
+{
+  "tool": "local code execution",
+  "runtime": "python3",
+  "stdin": "input.json",
+  "source": "aunx-demo.py",
+  "exit_code": 0,
+  "verdict": "OK",
+  "output_truncated": false,
+  "stderr": "",
+  "network_calls_by_demo": 0,
+  "receipt_note": "The runtime's requested no-network flag was best-effort on this platform. The demo source uses only json and sys and makes no network calls."
+}

@@ -1,0 +1,10 @@
+[
+  {"id":"e01","date":"2030-04-01","session":"alpha","kind":"correction","quote":"Keep the status report to one paragraph."},
+  {"id":"e02","date":"2030-04-02","session":"beta","kind":"correction","quote":"Keep the status report to one paragraph."},
+  {"id":"e03","date":"2030-04-03","session":"gamma","kind":"correction","quote":"You called the export complete before checking that the output opened.","pattern":"completion-evidence"},
+  {"id":"e04","date":"2030-04-03","session":"gamma","kind":"correction","quote":"Keep the status report to one paragraph.","pattern":"concise-status"},
+  {"id":"e05","date":"2030-04-03","session":"gamma","kind":"correction","quote":"For this workspace, include the source link when quoting a reference.","pattern":"reference-links"},
+  {"id":"e06","date":"2030-04-04","session":"delta","kind":"correction","quote":"You said the report was done before its acceptance check passed.","pattern":"completion-evidence"},
+  {"id":"e07","date":"2030-04-04","session":"delta","kind":"correction","quote":"Keep the status report to one paragraph.","pattern":"concise-status"},
+  {"id":"e08","date":"2030-04-04","session":"delta","kind":"correction","quote":"For this workspace, include the source link when quoting a reference.","pattern":"reference-links"}
+]

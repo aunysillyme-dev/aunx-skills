@@ -1,0 +1,41 @@
+{
+  "transport": "local synthetic fixtures; no network requests",
+  "batches": [
+    {
+      "rung": "index discovery",
+      "responses": [
+        {
+          "url": "https://docs.example.test/llms.txt",
+          "status": 200,
+          "transport": "local fixture",
+          "body": "# Sample API documentation\n\n> Synthetic documentation for a local retrieval demo.\n\n## Guides\n\n- [Retries](https://docs.example.test/docs/guides/retries.md): Handling rate limits and retryable responses.\n- [Authentication](https://docs.example.test/docs/guides/authentication.md): Supplying an API key.\n"
+        },
+        {
+          "url": "https://docs.example.test/docs/llms.txt",
+          "status": 404,
+          "transport": "local fixture",
+          "body": "Fixture not found"
+        }
+      ]
+    },
+    {
+      "rung": "Markdown",
+      "responses": [
+        {
+          "url": "https://docs.example.test/docs/guides/retries.md",
+          "status": 200,
+          "transport": "local fixture",
+          "body": "# Retries\n\nWhen the sample API returns HTTP 429, read the `Retry-After` response header and wait the indicated duration before retrying. If that header is absent, use exponential backoff with jitter and stop after three retry attempts. Retry only idempotent operations or operations that include an idempotency key.\n"
+        },
+        {
+          "url": "https://docs.example.test/docs/guides/authentication.md",
+          "status": 200,
+          "transport": "local fixture",
+          "body": "# Authentication\n\nSend the API key in the `Authorization` header using the Bearer scheme. Keep the key out of URLs and query strings. This fixture contains no actual credentials.\n"
+        }
+      ]
+    }
+  ],
+  "network_tested": false,
+  "higher_rungs_used": []
+}

@@ -1,0 +1,40 @@
+{
+  "query": {
+    "ran": true,
+    "terms": [
+      "refund",
+      "returns",
+      "money back"
+    ],
+    "control_term": "shipping policy",
+    "control_matches": [
+      "shipping"
+    ],
+    "target_matches": []
+  },
+  "scope": {
+    "source": "synthetic handbook export",
+    "snapshot_time": "2030-04-12T09:00:00Z",
+    "included": "published pages in this local export",
+    "excluded": "drafts, archived pages, and the live website",
+    "complete": false
+  },
+  "job": {
+    "id": "sample-export",
+    "status": "queued",
+    "terminal": false
+  },
+  "checks": {
+    "reported_verdict": "PASS",
+    "executed": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": [
+      {
+        "name": "live-links",
+        "status": "skipped",
+        "reason": "live website outside demo scope"
+      }
+    ]
+  }
+}

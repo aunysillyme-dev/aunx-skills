@@ -1,0 +1,4 @@
+Starting asset audit
+asset 1: checked
+asset 2: checked
+[aunx-keep e44982caaf23448fb3d7487b5a981d54: lines 1-3 of 14; 55 of 258 bytes; exit 7; retrieve: aunx-keep read e44982caaf23448fb3d7487b5a981d54]

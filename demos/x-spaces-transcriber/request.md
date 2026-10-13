@@ -1,0 +1,1 @@
+Install space-tape from an available local source checkout without network access. Run its help command and report installation and help outcomes. This is a setup demonstration only; do not download or transcribe a replay.

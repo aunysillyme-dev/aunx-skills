@@ -1,0 +1,63 @@
+{
+  "tool": "code-execution",
+  "exit_code": 0,
+  "verdict": "OK",
+  "network_calls_made": false,
+  "requested_no_net_unenforced": true,
+  "result": {
+    "total_entries": 8,
+    "selected_ids": [
+      "e03",
+      "e04",
+      "e05",
+      "e06",
+      "e07",
+      "e08"
+    ],
+    "excluded_ids": [
+      "e01",
+      "e02"
+    ],
+    "maximum_reviewed_date": "2030-04-04",
+    "groups": {
+      "completion-evidence": {
+        "count": 2,
+        "sessions": [
+          "delta",
+          "gamma"
+        ],
+        "ids": [
+          "e03",
+          "e06"
+        ]
+      },
+      "concise-status": {
+        "count": 2,
+        "sessions": [
+          "delta",
+          "gamma"
+        ],
+        "ids": [
+          "e04",
+          "e07"
+        ]
+      },
+      "reference-links": {
+        "count": 2,
+        "sessions": [
+          "delta",
+          "gamma"
+        ],
+        "ids": [
+          "e05",
+          "e08"
+        ]
+      }
+    },
+    "hashes": {
+      "log": "09663f497e28db763e0b10110077aa164578843fa32821e0a12ccc2e3ab60cd6",
+      "state": "621e4c89648e478e3a27d07487af2e2a042a5772db4d86e3ae4c79c876ac7ed5",
+      "rules": "1a6193601ccc30554e40c64d1f9a86bb634fb0032897a71a0f9b57ffa009003f"
+    }
+  }
+}

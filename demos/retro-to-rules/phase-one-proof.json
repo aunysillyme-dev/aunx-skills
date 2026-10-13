@@ -1,0 +1,17 @@
+{
+  "phase": "proposal-only",
+  "exit_code": 0,
+  "hashes_before": {
+    "log": "09663f497e28db763e0b10110077aa164578843fa32821e0a12ccc2e3ab60cd6",
+    "state": "621e4c89648e478e3a27d07487af2e2a042a5772db4d86e3ae4c79c876ac7ed5",
+    "rules": "1a6193601ccc30554e40c64d1f9a86bb634fb0032897a71a0f9b57ffa009003f"
+  },
+  "hashes_after": {
+    "log": "09663f497e28db763e0b10110077aa164578843fa32821e0a12ccc2e3ab60cd6",
+    "state": "621e4c89648e478e3a27d07487af2e2a042a5772db4d86e3ae4c79c876ac7ed5",
+    "rules": "1a6193601ccc30554e40c64d1f9a86bb634fb0032897a71a0f9b57ffa009003f"
+  },
+  "rules_unchanged": true,
+  "watermark_unchanged": true,
+  "source_baseline_unchanged": true
+}

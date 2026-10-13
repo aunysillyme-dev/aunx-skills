@@ -1,0 +1,8 @@
+# Sample API documentation
+
+> Synthetic documentation for a local retrieval demo.
+
+## Guides
+
+- [Retries](https://docs.example.test/docs/guides/retries.md): Handling rate limits and retryable responses.
+- [Authentication](https://docs.example.test/docs/guides/authentication.md): Supplying an API key.

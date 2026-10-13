@@ -1,0 +1,12 @@
+{
+  "phase": "pre-approval-write-baseline-recheck",
+  "exit_code": 0,
+  "existing_reviewed_entries_unchanged": true,
+  "destination_unchanged": true,
+  "baseline_count": 8,
+  "current_count": 9,
+  "pending_ids": [
+    "e09"
+  ],
+  "safe_reviewed_boundary": "2030-04-04"
+}

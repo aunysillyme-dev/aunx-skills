@@ -1,0 +1,17 @@
+{
+  "source": "synthetic handbook export",
+  "snapshot_time": "2030-04-12T09:00:00Z",
+  "included": "published pages in this local export",
+  "excluded": "drafts, archived pages, and the live website",
+  "complete": false,
+  "pages": [
+    {"slug": "shipping", "text": "Shipping policy: orders ship after payment confirmation."},
+    {"slug": "contact", "text": "Contact policy: use the support form for order questions."}
+  ],
+  "job": {"id": "sample-export", "status": "queued", "terminal": false},
+  "checks": [
+    {"name": "page-format", "status": "passed"},
+    {"name": "live-links", "status": "skipped", "reason": "live website outside demo scope"}
+  ],
+  "reported_verdict": "PASS"
+}

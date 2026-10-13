@@ -1,0 +1,3 @@
+asset 10: checked
+ERROR missing icon: checkout.svg
+asset 12: checked

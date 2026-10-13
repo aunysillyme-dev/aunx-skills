@@ -1,0 +1,23 @@
+{
+  "phase": "final-artifact-readback",
+  "exit_code": 0,
+  "approved_rule_saved": true,
+  "deferred_rule_not_saved": true,
+  "reviewed_boundary": "2030-04-04",
+  "reviewed_ids": [
+    "e01",
+    "e02",
+    "e03",
+    "e04",
+    "e05",
+    "e06",
+    "e07",
+    "e08"
+  ],
+  "pending_ids": [
+    "e09"
+  ],
+  "deferred_proposals": [
+    2
+  ]
+}

@@ -1,0 +1,24 @@
+# aunx-skills
+
+> Ten public agent skill packs by Auny LLC for reliable command logs, arithmetic, documentation retrieval, refactors, issue tracking, reusable templates, and approved behavior changes. Four free marketplace packs, six individually priced packs, and a $7.99 complete bundle. All repository source is MIT licensed.
+
+Skills are standalone SKILL.md folders readable by Claude Code, Codex CLI, Cursor, Gemini CLI, and other Markdown-capable agents. Referenced tools require their own installation and permissions.
+
+## Overview
+
+- [README](https://github.com/aunysillyme-dev/aunx-skills/blob/main/README.md): Installation, prices, permissions, demos, and direct FAQ answers.
+- [Credits](https://github.com/aunysillyme-dev/aunx-skills/blob/main/CREDITS.md): Upstream creators, source links, licenses, and usage.
+- [License](https://github.com/aunysillyme-dev/aunx-skills/blob/main/LICENSE): MIT license.
+
+## Skills
+
+- [Full Output Keeper](https://github.com/aunysillyme-dev/aunx-skills/blob/main/skills/full-output-keeper/SKILL.md): Preserve full command output, exit status, and retrieval identifiers.
+- [Number Guard](https://github.com/aunysillyme-dev/aunx-skills/blob/main/skills/number-guard/SKILL.md): Calculate consequential figures with exact and rounded values.
+- [X Spaces Transcriber](https://github.com/aunysillyme-dev/aunx-skills/blob/main/skills/x-spaces-transcriber/SKILL.md): Install space-tape and transcribe X Spaces with speaker labels.
+- [Docs Fetch Ladder](https://github.com/aunysillyme-dev/aunx-skills/blob/main/skills/docs-fetch-ladder/SKILL.md): Select documentation indexes, Markdown, fetches, then crawlers.
+- [Absence Check](https://github.com/aunysillyme-dev/aunx-skills/blob/main/skills/absence-check/SKILL.md): Verify scope, freshness, and completion before absence claims.
+- [Instruction Weight](https://github.com/aunysillyme-dev/aunx-skills/blob/main/skills/instruction-weight/SKILL.md): Preserve gesture, preference, practice, and rule distinctions.
+- [Rename Sweep](https://github.com/aunysillyme-dev/aunx-skills/blob/main/skills/rename-sweep/SKILL.md): Map rename surfaces and verify old references.
+- [Ticket Gate](https://github.com/aunysillyme-dev/aunx-skills/blob/main/skills/ticket-gate/SKILL.md): Evaluate issues and artifact-based completion signals.
+- [Client Work to Template](https://github.com/aunysillyme-dev/aunx-skills/blob/main/skills/client-work-to-template/SKILL.md): Extract reusable client methods and scan for identifying details.
+- [Retro to Rules](https://github.com/aunysillyme-dev/aunx-skills/blob/main/skills/retro-to-rules/SKILL.md): Propose repeated lessons, approve specific changes, then advance the watermark.

@@ -1,0 +1,15 @@
+usage: space-tape [-h] [--version] {transcribe,hydra,clip,highlights} ...
+
+Open-source X Spaces transcription. Whisper is the ear. Hydra is the speaker
+list.
+
+positional arguments:
+  {transcribe,hydra,clip,highlights}
+    transcribe          Download a recorded Space and emit cues + transcript
+    hydra               Parse Hydra ID3 from a raw replay file (no Whisper)
+    clip                Chop cues.json to a timestamp window
+    highlights          Pick punchy cues from cues.json
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit

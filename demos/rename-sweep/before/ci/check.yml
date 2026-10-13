@@ -1,0 +1,5 @@
+name: Check delay
+env:
+  CONFIG_KEY: cargo_delay
+steps:
+  - run: python3 tests/test_settings.py

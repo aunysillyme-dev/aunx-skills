@@ -1,0 +1,16 @@
+{
+  "repository": "sample-support-tool",
+  "session_creation_limit": 5,
+  "open_issues": [
+    {"id": "DEMO-01", "title": "Write the health check guide", "paths": ["docs/health-check.md"], "done_signal": "file-exists - docs/health-check.md contains Status: ready and operator steps"},
+    {"id": "DEMO-02", "title": "Repair broken guide links", "class": "broken-guide-link", "paths": ["docs/"], "affected_items": ["docs/start.md#install"], "done_signal": "manual - link-check report lists each repaired link; maintainer confirms the report"}
+  ],
+  "candidates": [
+    {"key": "guide", "title": "Write the health check guide", "paths": ["docs/health-check.md"], "context": "The guide is now present; check its acceptance condition."},
+    {"key": "links", "title": "Two more guide links are broken", "class": "broken-guide-link", "paths": ["docs/faq.md#setup", "docs/start.md#usage"], "context": "Existing link-repair class covers these additional findings."},
+    {"key": "parser", "title": "Handle empty webhook bodies", "paths": ["src/webhook.py"], "context": "A reproducible empty request causes a parser exception. A developer can start the fix today. The review owner explicitly asked for it.", "done_signal": "commit-touches-path - commit changes src/webhook.py; a regression run shows an empty body returns the agreed 400 response"},
+    {"key": "product", "title": "Rebuild the entire support product", "paths": ["src/"], "context": "Scope and acceptance criteria are undecided; this is larger than one person's actionable unit."},
+    {"key": "wording", "title": "Choose between Setup and Getting started", "paths": ["docs/start.md"], "context": "A one-sentence editorial choice can be settled in the review conversation."},
+    {"key": "wait", "title": "Wait for provider review", "paths": ["src/webhook.py"], "context": "The parser issue depends on a provider response before integration work can start."}
+  ]
+}

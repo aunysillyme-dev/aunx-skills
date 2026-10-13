@@ -1,0 +1,11 @@
+Processing ./demos/x-spaces-transcriber/local-source
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: space-tape
+  Building wheel for space-tape (pyproject.toml): started
+  Building wheel for space-tape (pyproject.toml): finished with status 'done'
+  Created wheel for space-tape: filename=space_tape-0.1.0-py3-none-any.whl size=21334 sha256=5fdd9209cc36c0cdada9ec9c85e5a81447bccfaa8505d87065fb7ff5516391a1
+  Stored in directory: <temporary-path>
+Successfully built space-tape
+Installing collected packages: space-tape
+Successfully installed space-tape-0.1.0

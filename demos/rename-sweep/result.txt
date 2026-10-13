@@ -1,0 +1,28 @@
+Method: Python stdlib literal content search over declared real directories.
+Declared active roots: src, config, docs, tests, ci, notes
+Control search completed: old identifier found before edit.
+Before hits:
+src/settings.py:1: def cargo_delay(config):
+src/settings.py:2:     return config["cargo_delay"]
+config/settings.json:1: {"cargo_delay": 2}
+docs/guide.md:3: Set `cargo_delay` to control dispatch spacing.
+tests/test_settings.py:6: from settings import cargo_delay
+tests/test_settings.py:8: assert cargo_delay(config) == 2
+ci/check.yml:3:   CONFIG_KEY: cargo_delay
+notes/ticket.md:3: Update the cargo_delay reader, sample, docs, and checks.
+Changed active files:
+src/settings.py
+config/settings.json
+docs/guide.md
+tests/test_settings.py
+ci/check.yml
+notes/ticket.md
+Final active old-identifier hits: 0; search completed successfully.
+Historical exception (preserved byte-for-byte):
+history/release-notes.md:3: The sample originally used cargo_delay.
+Behavior command: python3 tests/test_settings.py
+PASS: config reader returns the expected delay
+Behavior exit code: 0
+CI configuration was updated; no CI service was invoked.
+Open-ticket scope: synthetic local note only; external trackers excluded by request.
+Verdict: complete in the declared synthetic scope.

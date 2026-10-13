@@ -1,0 +1,20 @@
+{
+  "phase": "approved-write-readback",
+  "exit_code": 0,
+  "approved_numbers": [
+    1
+  ],
+  "deferred_numbers": [
+    2
+  ],
+  "approved_wording_present": true,
+  "deferred_rule_absent": true,
+  "baseline_count": 8,
+  "current_count": 9,
+  "new_pending_ids": [
+    "e09"
+  ],
+  "reviewed_boundary": "2030-04-04",
+  "rules_sha256": "aa6a7fa3b4f66cfd0fbe7460a572b0bbd2d459268429f2cd5181204d37958d39",
+  "synthesis_sha256": "d3e0b4b83c1c8f4f459c37da720cf9eb95a492a8aa78209e0cc89c44721c72b7"
+}
