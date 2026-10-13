@@ -38,8 +38,8 @@ To run a fresh capture and read it back, create a temporary cache directory:
 
 ```sh
 CACHE=$(mktemp -d)
-AUNX_KEEP_CACHE="$CACHE" python3 skills/full-output-keeper/scripts/aunx-keep --head 3 -- python3 demos/full-output-keeper/diagnostic.py
-AUNX_KEEP_CACHE="$CACHE" python3 skills/full-output-keeper/scripts/aunx-keep read <ID> --grep ERROR
+AUNX_KEEP_CACHE="$CACHE" python3 skills/full-output-keeper/scripts/aunx-keep.py --head 3 -- python3 demos/full-output-keeper/diagnostic.py
+AUNX_KEEP_CACHE="$CACHE" python3 skills/full-output-keeper/scripts/aunx-keep.py read <ID> --grep ERROR
 ```
 
 The helper returned command exit **7**, displayed lines **1-3 of 14**, and retained all **258 bytes**. Running `read ID --grep ERROR` against the actual saved output returned `12:ERROR missing icon: checkout.svg`. Full retrieval with `read ID` matched the original command output byte for byte; lines 11-13 supplied the surrounding context.

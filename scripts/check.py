@@ -9,6 +9,8 @@ import sys
 import zipfile
 from pathlib import Path
 
+from pack import pack_files
+
 ROOT = Path(__file__).resolve().parents[1]
 SLUGS = (
     "full-output-keeper", "number-guard", "x-spaces-transcriber",
@@ -23,7 +25,8 @@ FIELDS = (
 TAGS = set("ai-agents automation productivity documentation devops code-review "
            "developer-tools llm-ops research writing marketing project-management "
            "business-operations testing workflow-automation python".split())
-EXCLUDED = {".git", "node_modules", ".venv", "venv", "__pycache__", "dist", "build"}
+# promo/ is the gitignored local render workspace for marketplace videos; it is never published.
+EXCLUDED = {".git", "node_modules", ".venv", "venv", "__pycache__", "dist", "build", "promo"}
 UPSTREAM = re.compile(r"github\.com/(?!aunysillyme(?:-dev)?/)[\w.-]+/[\w.-]+"
                       r"|\b(?:rtk|codecalc|space-tape|Crawl4AI|AnswerDotAI|Whisper)\b", re.I)
 
@@ -101,6 +104,9 @@ def validate(patterns):
     for slug in SLUGS:
         folder = ROOT / "skills" / slug
         try:
+            for file in pack_files(folder):
+                if not re.fullmatch(r"\.[A-Za-z0-9]+", file.suffix):
+                    errors.append(f"skills/{slug}/{file.relative_to(folder)}: shipped file must have an extension")
             skill = (folder / "SKILL.md").read_text()
             metadata = frontmatter(skill)
             if metadata.get("name") != slug:
@@ -121,8 +127,8 @@ def validate(patterns):
             tags = set(re.findall(r"[a-z]+(?:-[a-z]+)*", fields.get("tags", "")))
             if not tags or not tags <= TAGS:
                 errors.append(f"skills/{slug}/listing.md: invalid Tags")
-            if (folder / "LICENSE").read_bytes() != (ROOT / "LICENSE").read_bytes():
-                errors.append(f"skills/{slug}/LICENSE: must match root license")
+            if (folder / "LICENSE.txt").read_bytes() != (ROOT / "LICENSE").read_bytes():
+                errors.append(f"skills/{slug}/LICENSE.txt: must match root license")
             png = (ROOT / "logos" / (slug + ".png")).read_bytes()
             if (png[:8] != b"\x89PNG\r\n\x1a\n" or png[12:16] != b"IHDR"
                     or struct.unpack(">II", png[16:24]) != (512, 512)):

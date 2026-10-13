@@ -10,6 +10,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def pack_files(folder):
+    files = [folder / "SKILL.md", folder / "LICENSE.txt"]
+    for name in ("references", "scripts"):
+        files.extend(p for p in (folder / name).rglob("*") if p.is_file()
+                     and not any(x in {"__pycache__", ".DS_Store"} for x in p.parts))
+    return files
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--version", default="1.0.0")
@@ -23,12 +31,12 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     folders = sorted(p for p in (ROOT / "skills").iterdir() if p.is_dir())
     for folder in folders:
-        files = [folder / "SKILL.md", folder / "LICENSE"]
-        for name in ("references", "scripts"):
-            files.extend(p for p in (folder / name).rglob("*") if p.is_file()
-                         and not any(x in {"__pycache__", ".DS_Store"} for x in p.parts))
+        files = pack_files(folder)
         if any(not p.is_file() or p.is_symlink() for p in files):
             raise ValueError(f"{folder.name}: missing required file or symlink")
+        for file in files:
+            if not re.fullmatch(r"\.[A-Za-z0-9]+", file.suffix):
+                raise ValueError(f"{folder.name}/{file.relative_to(folder)}: shipped file must have an extension")
         path = output / f"{folder.name}-{args.version}.zip"
         with zipfile.ZipFile(path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
             for file in sorted(files):

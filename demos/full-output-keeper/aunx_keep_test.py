@@ -12,7 +12,7 @@ import time
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
-HELPER = ROOT / "skills/full-output-keeper/scripts/aunx-keep"
+HELPER = ROOT / "skills/full-output-keeper/scripts/aunx-keep.py"
 
 
 def invoke(cache, *args):

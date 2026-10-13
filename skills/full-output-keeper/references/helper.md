@@ -8,7 +8,7 @@ Dependencies: Python 3.8 or newer with the standard library. Shell-string mode a
 
 ## Trigger and invocation chain
 
-Invocation is explicit: agent or human -> `python3 scripts/aunx-keep` -> child process -> private cache -> bounded view -> footer -> process exit. No shell profile, hook, PATH entry, daemon or schedule is installed. What watches it: **nothing**. The caller checks its exit status and reads omitted evidence when needed.
+Invocation is explicit: agent or human -> `python3 scripts/aunx-keep.py` -> child process -> private cache -> bounded view -> footer -> process exit. No shell profile, hook, PATH entry, daemon or schedule is installed. What watches it: **nothing**. The caller checks its exit status and reads omitted evidence when needed.
 
 Run from the skill folder or supply the helper's actual path. Default view: first 40 lines and at most 12000 source bytes. Set `--head`, `--tail`, or `--max-bytes` to change the view. A line larger than the byte budget is omitted intact. Retrieval preserves the original bytes, including a missing final newline. Search prefixes matching lines with their original line numbers; line ranges are 1-based and inclusive.
 
@@ -33,9 +33,9 @@ Each id is valid for seven days from capture. Expired ids return exit 3 even if 
 ## Hand-run verification
 
 ```sh
-python3 scripts/aunx-keep --head 2 -c 'printf "start\nERROR demo\nend\n"; exit 7'
+python3 scripts/aunx-keep.py --head 2 -c 'printf "start\nERROR demo\nend\n"; exit 7'
 ```
 
-Check the returned status: 7. Copy the printed id into `python3 scripts/aunx-keep read ID --grep ERROR`. It must return `2:ERROR demo`. Run `read ID` without filters to retrieve all three lines. If any check fails, retain the error and command status and report the helper/version and a reproducible synthetic input.
+Check the returned status: 7. Copy the printed id into `python3 scripts/aunx-keep.py read ID --grep ERROR`. It must return `2:ERROR demo`. Run `read ID` without filters to retrieve all three lines. If any check fails, retain the error and command status and report the helper/version and a reproducible synthetic input.
 
-Source of truth: `scripts/aunx-keep` defines runtime behavior; `SKILL.md` defines the agent workflow. This reference defines operation, retention and recovery.
+Source of truth: `scripts/aunx-keep.py` defines runtime behavior; `SKILL.md` defines the agent workflow. This reference defines operation, retention and recovery.

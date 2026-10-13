@@ -11,7 +11,7 @@ When a build, test, search, or diagnostic command may produce more output than t
 
 ## Steps
 
-1. Resolve `scripts/aunx-keep` relative to this skill folder. Read [the operating reference](references/helper.md) when setting a cache location or investigating a helper failure.
+1. Resolve `scripts/aunx-keep.py` relative to this skill folder. Read [the operating reference](references/helper.md) when setting a cache location or investigating a helper failure.
 2. Choose a useful view: `--head N` for opening context or `--tail N` for a final summary. Add `--max-bytes N` when lines may be large. The footer is outside that display budget.
 3. Run the authorized command directly after `--`. Use `-c` only when shell syntax is needed. Preserve the command's returned status.
 4. Read the footer: retrieval id, line range, total size and exit code. If storage failed, report the stated failure and avoid promising full recall.
@@ -20,11 +20,11 @@ When a build, test, search, or diagnostic command may produce more output than t
 From the skill folder:
 
 ```sh
-python3 scripts/aunx-keep --head 5 -- python3 build.py
-python3 scripts/aunx-keep --tail 10 -c 'python3 build.py; status=$?; exit "$status"'
-python3 scripts/aunx-keep read RETRIEVAL_ID --lines 10:30
-python3 scripts/aunx-keep read RETRIEVAL_ID --grep 'error|failed' -i
-python3 scripts/aunx-keep read RETRIEVAL_ID
+python3 scripts/aunx-keep.py --head 5 -- python3 build.py
+python3 scripts/aunx-keep.py --tail 10 -c 'python3 build.py; status=$?; exit "$status"'
+python3 scripts/aunx-keep.py read RETRIEVAL_ID --lines 10:30
+python3 scripts/aunx-keep.py read RETRIEVAL_ID --grep 'error|failed' -i
+python3 scripts/aunx-keep.py read RETRIEVAL_ID
 ```
 
 Replace `RETRIEVAL_ID` with the id printed by the run. Keep the same cache environment for run and retrieval.

@@ -23,7 +23,7 @@ Made by Auny LLC. Four packs are free. Six have individual marketplace prices. T
 
 ## Install a pack
 
-Copy one folder from `skills/` into your agent's skills directory. Keep its `SKILL.md`, `LICENSE`, and any `scripts/` or `references/` together. Marketplace `listing.md` is for humans and can be left out of an installation.
+Copy one folder from `skills/` into your agent's skills directory. Keep its `SKILL.md`, `LICENSE.txt`, and any `scripts/` or `references/` together. Marketplace `listing.md` is for humans and can be left out of an installation.
 
 | Agent | User directory | Project directory |
 |---|---|---|
@@ -58,7 +58,7 @@ python3 scripts/check.py
 python3 scripts/pack.py
 ```
 
-The packager writes ten versioned zip files to `dist/`, one per skill. Each zip has an installable folder containing `SKILL.md`, `LICENSE`, and any references or scripts. Listings, logos, and demos remain outside the pack zips. `dist/` is ignored by git. Use `--version 1.0.1` to set a release version. The checker also accepts `--scrub /path/to/private-patterns.txt`, with one case-insensitive regex per non-comment line; keep that file outside the repository. It scans repo text and generated zip members and reports locations without echoing private patterns.
+The packager writes ten versioned zip files to `dist/`, one per skill. Each zip has an installable folder containing `SKILL.md`, `LICENSE.txt`, and any references or scripts. Listings, logos, and demos remain outside the pack zips. `dist/` is ignored by git. Use `--version 1.0.1` to set a release version. The checker also accepts `--scrub /path/to/private-patterns.txt`, with one case-insensitive regex per non-comment line; keep that file outside the repository. It scans repo text and generated zip members and reports locations without echoing private patterns.
 
 Repository scripts require Python 3.9 or later and its standard library; the checker also uses read-only git file enumeration. The checker reads artifacts and reports every failure with a nonzero exit status. It writes no report files. The packager reads pack files and writes or replaces only the selected version's archives. After editing a pack, rebuild its archives and run the checker with any authorized external scrub list before release. Nothing watches these scripts: the caller starts them and checks their exit codes. `scripts/check.py` and `scripts/pack.py` define their behavior. To regenerate the original logo family, run `python3 scripts/aunx-logos.py` with `rsvg-convert` installed; it writes SVG and PNG files under `logos/`.
 
