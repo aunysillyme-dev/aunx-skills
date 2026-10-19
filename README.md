@@ -74,7 +74,7 @@ They use plain Markdown with YAML `name` and `description` fields. Those agents 
 
 ### Which AI agent skills are free?
 
-Full Output Keeper, Number Guard, X Spaces Transcriber, and Docs Fetch Ladder have free marketplace listings. All repository source is public under MIT.
+Full Output Keeper, Number Guard, and Docs Fetch Ladder have free marketplace listings. X Spaces Transcriber is in this repo only. All repository source is public under MIT.
 
 ### How much is the paid skill bundle?
 
