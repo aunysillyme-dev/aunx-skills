@@ -59,6 +59,17 @@ class ArtifactTests(unittest.TestCase):
             (self.root / "logos" / (slug + ".svg")).write_text("<svg/>")
             (self.root / "demos" / slug).mkdir(parents=True)
 
+    def test_frontmatter_internal_metadata(self):
+        prefix = "---\nname: fixture\n"
+        block = "metadata:\n  internal: true\n"
+        self.assertEqual(check.frontmatter(prefix + block + "---\n"),
+                         {"name": "fixture", "metadata": {"internal": True}})
+        for invalid in ("metadata:\n  other: x\n", "metadata:\n",
+                        "metadata:\n  internal: false\n", block + block,
+                        block + "name: after\n", "metadata: flat\n" + block):
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                check.frontmatter(prefix + invalid + "---\n")
+
     def test_scrub_rejects_repo_and_zip_without_echoing_private_text(self):
         self.assertEqual(check.validate([]), [])
         marker = "synthetic-sensitive-marker"

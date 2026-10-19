@@ -1,6 +1,8 @@
 ---
 name: ticket-gate
 description: Decide what deserves an issue before filing tasks in GitHub Issues, Jira, or another tracker. Use for issue triage, duplicate tickets, actionable backlog items, acceptance criteria, and evidence-based issue closure.
+metadata:
+  internal: true
 ---
 
 # Ticket Gate

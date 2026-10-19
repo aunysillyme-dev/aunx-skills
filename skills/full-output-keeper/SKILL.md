@@ -1,6 +1,8 @@
 ---
 name: full-output-keeper
 description: Use when command output is too long, terminal logs are truncated, or an error may be hidden in omitted lines. Run commands with a bounded head or tail display, preserve their exit status, and retrieve the full saved output by line range or search.
+metadata:
+  internal: true
 ---
 
 # Full Output Keeper

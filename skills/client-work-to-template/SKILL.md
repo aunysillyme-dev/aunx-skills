@@ -1,6 +1,8 @@
 ---
 name: client-work-to-template
 description: Turn finished client work into a reusable process document, checklist, or template. Use when asked to extract a repeatable method, anonymize client work, create a reusable consulting template, or remove client details before sharing a workflow.
+metadata:
+  internal: true
 ---
 
 # Client Work to Template

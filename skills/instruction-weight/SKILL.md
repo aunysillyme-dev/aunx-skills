@@ -1,6 +1,8 @@
 ---
 name: instruction-weight
 description: Classify user instructions as a gesture, preference, practice, or rule before saving agent memory or editing CLAUDE.md, AGENTS.md, or rules files. Use when asked to remember a preference, capture a working habit, interpret a correction, or decide whether a one-off request should become a standing instruction.
+metadata:
+  internal: true
 ---
 
 # Instruction Weight

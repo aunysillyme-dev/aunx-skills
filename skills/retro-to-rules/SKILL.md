@@ -1,6 +1,8 @@
 ---
 name: retro-to-rules
 description: Turn session logs, retrospectives, and repeated agent corrections into proposed behavior rules with evidence. Use when asked to learn from past sessions, synthesize feedback, or update agent memory from retros; save only specifically approved changes and track the entries actually reviewed.
+metadata:
+  internal: true
 ---
 
 # Retro to Rules

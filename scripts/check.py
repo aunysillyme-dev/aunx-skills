@@ -50,14 +50,22 @@ def text_files():
 
 
 def frontmatter(text):
-    """Parse the pack contract's flat YAML string mapping, rejecting other syntax."""
+    """Parse flat YAML strings and an optional trailing internal metadata block."""
     lines = text.splitlines()
     if not lines or lines[0] != "---" or "---" not in lines[1:]:
         raise ValueError("missing closed YAML frontmatter")
     result = {}
-    for line in lines[1:lines.index("---", 1)]:
+    fields = lines[1:lines.index("---", 1)]
+    for index, line in enumerate(fields):
         if not line.strip() or line.lstrip().startswith("#"):
             continue
+        if line == "metadata:":
+            if "metadata" in result:
+                raise ValueError("duplicate frontmatter key: metadata")
+            if fields[index + 1:] != ["  internal: true"]:
+                raise ValueError("expected trailing metadata with only internal: true")
+            result["metadata"] = {"internal": True}
+            break
         match = re.fullmatch(r"([a-z][a-z0-9_-]*):\s*(.+)", line)
         if not match:
             raise ValueError("expected flat YAML string fields")

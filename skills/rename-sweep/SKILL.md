@@ -1,6 +1,8 @@
 ---
 name: rename-sweep
 description: Use when a user asks to rename a variable, path, slug, schema field, setting, or shared term across a project. Map every affected surface, update authorized references, and verify the old identifier across declared paths with explicit historical exceptions.
+metadata:
+  internal: true
 ---
 
 # Rename Sweep

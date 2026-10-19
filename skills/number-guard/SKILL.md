@@ -1,6 +1,8 @@
 ---
 name: number-guard
 description: Use when a user asks to check AI math, calculate invoice totals, compare percentages, estimate token costs, convert units, or compute dates. Route consequential arithmetic through an available calculator or code execution tool and report exact values beside rounded results.
+metadata:
+  internal: true
 ---
 
 # Number Guard

@@ -1,6 +1,8 @@
 ---
 name: x-spaces-transcriber
 description: Transcribe a recorded X Space or Twitter Space with timestamps and speaker labels using the open-source space-tape CLI. Use for requests to turn an X Spaces replay or its announcement tweet into a transcript, or to install and check space-tape.
+metadata:
+  internal: true
 ---
 
 # X Spaces Transcriber

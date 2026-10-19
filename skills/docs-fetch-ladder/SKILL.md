@@ -1,6 +1,8 @@
 ---
 name: docs-fetch-ladder
 description: Fetch website documentation with an llms.txt first workflow when asked to read API docs, scrape documentation, or find Markdown pages. Try indexes and page Markdown before plain HTML, a crawler, and a hosted scraper, and report which method supplied each answer.
+metadata:
+  internal: true
 ---
 
 # Docs Fetch Ladder

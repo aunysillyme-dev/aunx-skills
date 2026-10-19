@@ -1,6 +1,8 @@
 ---
 name: absence-check
 description: Verify empty search results, missing files, zero counts, failed jobs, and skipped tests before reporting absence or failure. Use when asked "does this exist", "is anything left", "did it fail", or "did all tests pass" to give a scoped answer supported by live evidence.
+metadata:
+  internal: true
 ---
 
 # Absence Check
