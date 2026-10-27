@@ -1,5 +1,7 @@
 # aunx-skills
 
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/aunysillyme-dev/aunx-skills/badge)](https://scorecard.dev/viewer/?uri=github.com/aunysillyme-dev/aunx-skills)
+
 Ten standalone agent skills for things agents quietly get wrong: lost command output, unchecked numbers, incomplete renames, premature failure claims, and lessons saved as rules too soon.
 
 Made by Auny LLC. Four packs are free. Six have individual marketplace prices. The bundle of all six paid skills is **$7.99** on Agensi when published. This public repository contains the skill instructions and source under the [MIT license](LICENSE); a marketplace purchase does not grant exclusive access or change those license rights.
