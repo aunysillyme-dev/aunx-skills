@@ -51,6 +51,21 @@ These packs are instructions, not background services. Installing them creates n
 
 Full Output Keeper includes the Python 3 standard-library helper `aunx-keep`. It retains command output in a stated local cache for seven days; commands you choose can have their own side effects. Number Guard uses an available calculator or code tool. X Spaces Transcriber installs and invokes the separate space-tape CLI; package installation and actual transcription need network access, dependencies, and storage. Docs Fetch Ladder uses your available fetch or crawl tools when network access is authorized. The other packs read the task artifacts and write only the destinations you authorize. Read each pack's permissions notes before use.
 
+## Plugins
+
+Plugins are installable bundles for one agent's marketplace. They are separate from the ten skill packs above and are adapted per agent, one folder each under `plugins/`.
+
+| Plugin | Agent | What it does |
+|---|---|---|
+| [Decompose](plugins/aunx-decompose/README.md) | Claude Code | Split a task into steps, check dependencies, cycles and write-path overlap, and show which steps can run in parallel. Free, MIT. |
+
+Install from the Claude Code marketplace in this repository:
+
+```sh
+claude plugin marketplace add aunysillyme-dev/aunx-skills
+claude plugin install aunx-decompose@aunx
+```
+
 ## Demos and packaging
 
 [Demos](demos/) contain synthetic sample inputs and actual results. The X Spaces demo demonstrates offline installation and CLI help only. The documentation demo uses local fixtures, so it proves the selection workflow rather than live site access. None of the demos use client records.

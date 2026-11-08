@@ -1,0 +1,19 @@
+{
+  "name": "aunx-decompose",
+  "displayName": "Decompose",
+  "version": "0.1.0",
+  "description": "Break a task into checked steps and parallel waves: validates dependencies, cycles and write-path overlap.",
+  "author": {
+    "name": "Auny LLC"
+  },
+  "homepage": "https://github.com/aunysillyme-dev/aunx-skills/tree/main/plugins/aunx-decompose",
+  "repository": "https://github.com/aunysillyme-dev/aunx-skills",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "claude-code-plugin",
+    "task-planning",
+    "dependencies",
+    "parallelism"
+  ]
+}

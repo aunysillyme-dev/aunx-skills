@@ -1,0 +1,16 @@
+{
+  "name": "aunx",
+  "owner": {
+    "name": "Auny LLC"
+  },
+  "metadata": {
+    "description": "Plugins by Auny LLC for AI coding agents."
+  },
+  "plugins": [
+    {
+      "name": "aunx-decompose",
+      "source": "./plugins/aunx-decompose",
+      "description": "Break a task into checked steps and parallel waves."
+    }
+  ]
+}

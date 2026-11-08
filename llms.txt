@@ -9,6 +9,7 @@ Skills are standalone SKILL.md folders readable by Claude Code, Codex CLI, Curso
 - [README](https://github.com/aunysillyme-dev/aunx-skills/blob/main/README.md): Installation, prices, permissions, demos, and direct FAQ answers.
 - [Credits](https://github.com/aunysillyme-dev/aunx-skills/blob/main/CREDITS.md): Upstream creators, source links, licenses, and usage.
 - [License](https://github.com/aunysillyme-dev/aunx-skills/blob/main/LICENSE): MIT license.
+- [Decompose plugin](https://github.com/aunysillyme-dev/aunx-skills/blob/main/plugins/aunx-decompose/README.md): Claude Code plugin that splits a task into validated steps and parallel dependency waves.
 
 ## Skills
 
