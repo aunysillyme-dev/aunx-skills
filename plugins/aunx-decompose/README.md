@@ -29,6 +29,20 @@ claude plugin marketplace add aunysillyme-dev/aunx-skills
 claude plugin install aunx-decompose@aunx
 ```
 
+From npm, as a standalone skill copied to `~/.claude/skills/decompose` (add `--project` for `./.claude/skills`):
+
+```
+npx aunx-decompose install
+```
+
+From [skills.sh](https://skills.sh/aunysillyme-dev/aunx-skills/decompose), for Claude Code, Codex, Cursor and other agents:
+
+```
+npx skills add aunysillyme-dev/aunx-skills --skill decompose
+```
+
+`npx aunx-decompose check --plan plan.json` runs the checker without installing anything.
+
 Hermes Agent (from the plugin catalog, once listed):
 
 ```

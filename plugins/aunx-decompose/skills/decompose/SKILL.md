@@ -8,6 +8,11 @@ description: Split a task into the smallest checkable units, tag each with a typ
 Turn the user's task into explicit steps. This skill plans work; it does not
 execute the planned steps or grant permission to ship changes.
 
+The commands below reach the helper through `${CLAUDE_PLUGIN_ROOT}`, which the
+plugin sets. When this skill was installed on its own (with `npx skills add` or
+`npx aunx-decompose install`) and that variable is empty, start every command
+with `CLAUDE_PLUGIN_ROOT="<folder holding this SKILL.md>/../.."`.
+
 There are two forms. A **step plan** is a short list of steps with kinds, for
 simple tasks. A **unit map** is the full method below: the smallest units,
 typed and tagged, with waves, an advisor gate and a plan table. Use the unit

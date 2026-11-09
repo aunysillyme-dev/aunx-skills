@@ -78,6 +78,8 @@ claude plugin marketplace add aunysillyme-dev/aunx-skills
 claude plugin install aunx-decompose@aunx
 ```
 
+Or install it as a standalone skill with `npx aunx-decompose install` (npm) or `npx skills add aunysillyme-dev/aunx-skills --skill decompose` (skills.sh).
+
 Then ask Claude to split a task into steps, or run `/aunx-decompose:decompose <task>`.
 
 ## Demos and packaging
@@ -125,7 +127,7 @@ It splits a task into small typed units, checks them for dependency cycles, fals
 
 ### How do I install the Decompose plugin?
 
-Run `claude plugin marketplace add aunysillyme-dev/aunx-skills`, then `claude plugin install aunx-decompose@aunx`. It needs Claude Code and Python 3.8 or later.
+Run `claude plugin marketplace add aunysillyme-dev/aunx-skills`, then `claude plugin install aunx-decompose@aunx`. As a standalone skill, run `npx aunx-decompose install` or `npx skills add aunysillyme-dev/aunx-skills --skill decompose`. It needs Python 3.8 or later.
 
 ### Does Decompose send my tasks anywhere?
 
