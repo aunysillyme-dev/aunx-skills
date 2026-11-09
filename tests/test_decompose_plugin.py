@@ -577,5 +577,207 @@ class DecomposeTests(unittest.TestCase):
                 self.assertEqual(existing.read_text(), "user data")
 
 
+EXAMPLES = SCRIPT.parent.parent / "examples"
+import unitmap
+
+
+def unit(ident, inputs, outputs, deps=(), **extra):
+    row = {"id": ident, "type": "data", "speed": "fast", "clause_ids": ["C1"], "inputs": list(inputs),
+           "outputs": list(outputs), "deps": list(deps), "paths": [], "verify": "check it"}
+    row.update(extra)
+    return row
+
+
+class UnitMapTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(dir=ROOT)
+        self.addCleanup(self.temp.cleanup)
+        patcher = mock.patch.dict(os.environ, {"DECOMPOSE_RECIPES": str(Path(self.temp.name) / "r.json")})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        self.example = json.loads((EXAMPLES / "plan.json").read_text())
+
+    def check(self, data):
+        plan = unitmap.normalize(data)
+        return plan, unitmap.validate(plan, decompose.same_path, decompose.path_inside)
+
+    def run_plan(self, data, *extra):
+        path = Path(self.temp.name) / "plan.json"
+        path.write_text(json.dumps(data))
+        return subprocess.run([sys.executable, str(SCRIPT), "--plan", str(path), *extra],
+                              capture_output=True, text=True)
+
+    def test_example_waves_readers_and_coverage(self):
+        plan, errors = self.check(self.example)
+        self.assertEqual(errors, [])
+        result = unitmap.compute(plan, unitmap.defaults())
+        self.assertEqual(result["waves"], [["S1", "S3.1", "S3.2", "S3.3"], ["S2.1", "S2.2", "S2.3"], ["S4"]])
+        rows = {u["id"]: u for u in result["units"]}
+        self.assertEqual(rows["S1"]["downstream_readers"], 3)
+        self.assertEqual(rows["S1"]["importance"], "high")
+        self.assertEqual(rows["S4"]["importance"], "medium")
+        self.assertEqual(rows["S2.1"]["parallel_group"], "W1")
+        self.assertIsNone(rows["S4"]["parallel_group"])
+        self.assertEqual(result["critical_path"]["units"], ["S1", "S2.3", "S4"])
+        self.assertEqual(result["critical_path"]["length"], 11)
+        self.assertEqual(result["coverage"]["C2"], ["S3.1", "S3.2", "S3.3"])
+        self.assertEqual(result["advisor"]["reasons"], ["S1 read by 3 units"])
+
+    def test_invalidator_sorts_first_in_its_wave(self):
+        units = [unit("a", ["x"], ["a-out"]), unit("b", ["x"], ["b-out"], is_invalidator=True)]
+        result = unitmap.compute(unitmap.normalize({"clauses": ["C1"], "units": units}), unitmap.defaults())
+        self.assertEqual(result["waves"], [["b", "a"]])
+
+    def test_clause_gaps_and_unknown_clauses(self):
+        _, errors = self.check({"clauses": ["C1", "C2"], "units": [unit("a", ["x"], ["y"], clause_ids=["C3"])]})
+        self.assertIn("a: unknown clause C3", errors)
+        self.assertIn("clause C1 has no unit", errors)
+        self.assertIn("clause C2 has no unit", errors)
+        with self.assertRaisesRegex(ValueError, "clauses"):
+            unitmap.normalize([unit("a", ["x"], ["y"])])
+
+    def test_false_and_missing_edges(self):
+        _, errors = self.check({"clauses": ["C1"], "units": [
+            unit("a", ["x"], ["a-out"]), unit("b", ["x"], ["b-out"], ["a"]),
+            unit("c", ["a-out"], ["c-out"])]})
+        self.assertIn("false edge a -> b: b reads none of a's outputs", errors)
+        self.assertIn("missing edge a -> c: c reads a-out", errors)
+
+    def test_schema_errors(self):
+        _, errors = self.check({"clauses": ["C1"], "units": [
+            unit("a", ["x"], ["y"], type="poetry", speed="slow", verify=" ", extra=1, item_count=0)]})
+        for message in ("a: unknown type poetry", "a: unknown speed slow", "a: unknown field extra",
+                        "a: verify must say how the output is checked",
+                        "a: item_count must be a positive integer"):
+            self.assertIn(message, errors)
+        _, errors = self.check({"clauses": ["C1"], "units": [unit("a", ["x"], ["y"]), unit("b", ["x"], ["y"])]})
+        self.assertIn("output y is produced by a and b; name outputs per unit", errors)
+
+    def test_substep_rules(self):
+        _, errors = self.check({"clauses": ["C1"], "units": [
+            unit("S1", ["x"], ["p"]), unit("S1.1", ["x"], ["q"], parent_id="S1"),
+            unit("T2", ["x"], ["r"], parent_id="S2")]})
+        self.assertIn("S1.1: parent S1 is structural; remove its row once split", errors)
+        self.assertIn("T2: a substep id starts with its parent id and a dot", errors)
+
+    def test_concurrent_writes_rejected_ordered_writes_allowed(self):
+        target = str(Path(self.temp.name) / "out.txt")
+        parallel = [unit("a", ["x"], ["a-out"], paths=[target]), unit("b", ["x"], ["b-out"], paths=[target])]
+        _, errors = self.check({"clauses": ["C1"], "units": parallel})
+        self.assertIn("overlapping write paths: a and b can run at the same time", errors)
+        ordered = [unit("a", ["x"], ["a-out"], paths=[target]),
+                   unit("b", ["a-out"], ["b-out"], ["a"], paths=[target])]
+        self.assertEqual(self.check({"clauses": ["C1"], "units": ordered})[1], [])
+        _, errors = self.check({"clauses": ["C1"], "units": [unit("a", ["x"], ["y"], paths=["rel.txt"])]})
+        self.assertIn("a: write path must be absolute", errors)
+
+    def test_cycle_rejected(self):
+        _, errors = self.check({"clauses": ["C1"], "units": [
+            unit("a", ["b-out"], ["a-out"], ["b"]), unit("b", ["a-out"], ["b-out"], ["a"])]})
+        self.assertEqual(errors, ["dependency cycle"])
+
+    def test_dispatch_shapes(self):
+        limits = unitmap.defaults()
+        shape = lambda rows: unitmap._shape(rows, limits)[0]
+        reads = [unit("r%d" % i, ["x"], ["o%d" % i], type="research",
+                      needs={"capabilities": ["web"]}) for i in range(10)]
+        self.assertEqual(shape(reads), "agent-fanout")
+        self.assertEqual(shape(reads[:4]), "subagents")
+        self.assertEqual(shape(reads[:3]), "single")
+        self.assertEqual(shape([unit("w%d" % i, ["x"], ["o%d" % i], type="writing") for i in range(2)]),
+                         "bulk-prompt")
+        coding = [unit("c%d" % i, ["x"], ["o%d" % i], type="coding") for i in range(2)]
+        self.assertEqual(shape(coding), "single")
+        writers = [unit("c%d" % i, ["x"], ["o%d" % i], type="coding", paths=["/p/%d" % i]) for i in range(2)]
+        self.assertEqual(shape(writers), "split-worktrees")
+        self.assertEqual(shape([unit("n", ["x"], ["o"], item_count=12, type="data")]), "agent-fanout")
+
+    def test_gate_steps_units_and_serial(self):
+        chain = [unit("S1", ["x"], ["o1"])] + [unit("S%d" % i, ["o%d" % (i - 1)], ["o%d" % i], ["S%d" % (i - 1)])
+                                               for i in range(2, 7)]
+        plan = unitmap.normalize({"clauses": ["C1"], "units": chain})
+        reasons = unitmap.compute(plan, unitmap.defaults())["advisor"]["reasons"]
+        self.assertIn("steps=6 > 5", reasons)
+        self.assertIn("nearly serial: 6 step waves for 6 steps", reasons)
+        flat = [unit("S1.%d" % i, ["x"], ["o%d" % i], parent_id="S1") for i in range(12)]
+        reasons = unitmap.compute(unitmap.normalize({"clauses": ["C1"], "units": flat}),
+                                  unitmap.defaults())["advisor"]["reasons"]
+        self.assertEqual(reasons, ["units=12 >= 12"])
+        small = unitmap.normalize({"clauses": ["C1"], "units": [unit("a", ["x"], ["y"])]})
+        self.assertFalse(unitmap.compute(small, unitmap.defaults())["advisor"]["required"])
+
+    def test_patch_split_rewires_readers(self):
+        plan, _ = self.check(self.example)
+        patched = unitmap.apply_patch(plan, json.loads((EXAMPLES / "patch.json").read_text()))
+        self.assertEqual(unitmap.validate(patched, decompose.same_path, decompose.path_inside), [])
+        ids = [u["id"] for u in patched["units"]]
+        self.assertNotIn("S4", ids)
+        rows = {u["id"]: u for u in patched["units"]}
+        self.assertEqual(rows["S4.2"]["deps"], ["S4.1"])
+        self.assertEqual(rows["S4.1"]["parent_id"], "S4")
+        self.assertEqual(rows["S1"]["speed"], "fast")
+        self.assertIn("S4", [u["id"] for u in plan["units"]])
+
+    def test_patch_rejections(self):
+        plan, _ = self.check(self.example)
+        cases = [({"add_edges": []}, "missing edge cannot be patched"),
+                 ({"retier": [{"id": "S1", "speed": "frontier"}]}, "frontier needs a reason"),
+                 ({"split": [{"id": "S4", "into": [{"id": "S4.1", "outputs": ["recommendation.md"]}]}]},
+                  "at least two children"),
+                 ({"split": [{"id": "S4", "into": [{"id": "S9.1", "outputs": ["a"]},
+                                                   {"id": "S9.2", "outputs": ["b"]}]}]}, "S4.<n>"),
+                 ({"split": [{"id": "S4", "into": [{"id": "S4.1", "outputs": ["a"]},
+                                                   {"id": "S4.2", "outputs": ["b"]}]}]}, "every output"),
+                 ({"cut_edges": [{"from": "S3.1", "to": "S1"}]}, "no edge"),
+                 ({"patch": {}, "verdict": "ok"}, "unknown advice field"),
+                 ({"needs": [{"id": "nope", "needs": {}}]}, "unknown unit")]
+        for patch, message in cases:
+            with self.subTest(message=message), self.assertRaisesRegex(ValueError, re.escape(message)):
+                unitmap.apply_patch(plan, patch)
+
+    def test_cut_edge_drops_matching_inputs(self):
+        plan, _ = self.check(self.example)
+        patched = unitmap.apply_patch(plan, {"cut_edges": [{"from": "S3.1", "to": "S4"}]})
+        s4 = next(u for u in patched["units"] if u["id"] == "S4")
+        self.assertNotIn("S3.1", s4["deps"])
+        self.assertNotIn("license-alpha", s4["inputs"])
+
+    def test_cli_plan_table_json_and_errors(self):
+        result = self.run_plan(self.example)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PLAN valid", result.stdout)
+        self.assertIn("| S1 (invalidator) | - | C1 | data x fast | 0 | W0 | single |", result.stdout)
+        self.assertIn("REQUIRED before picks", result.stdout)
+        result = self.run_plan(self.example, "--json")
+        data = json.loads(result.stdout)
+        self.assertEqual(data["waves"][2], ["S4"])
+        self.assertFalse(data["patched"])
+        result = self.run_plan(self.example, "--apply-patch", str(EXAMPLES / "patch.json"))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("patch applied", result.stdout)
+        broken = copy.deepcopy(self.example)
+        broken["units"][0]["type"] = "nope"
+        result = self.run_plan(broken)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("unknown type nope", result.stderr)
+        bad = Path(self.temp.name) / "bad.json"
+        bad.write_text(json.dumps({"split": [{"id": "S4", "into": [
+            {"id": "S4.1", "outputs": ["recommendation.md"]},
+            {"id": "S4.2", "outputs": ["x"], "inputs": ["license-alpha"]}]}]}))
+        result = self.run_plan(self.example, "--apply-patch", str(bad))
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("patch rejected, map unchanged", result.stderr)
+        result = subprocess.run([sys.executable, str(SCRIPT), "--json"], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 2)
+
+    def test_user_plan_defaults_override(self):
+        store = Path(os.environ["DECOMPOSE_RECIPES"])
+        store.write_text(json.dumps({"plan_defaults": {"advisor_min_readers": 4}}))
+        result = self.run_plan(self.example)
+        self.assertIn("Advisor review: not required", result.stdout)
+        store.write_text(json.dumps({"plan_defaults": {"unknown_knob": 1}}))
+        self.assertEqual(self.run_plan(self.example).returncode, 2)
+
+
 if __name__ == "__main__":
     unittest.main()

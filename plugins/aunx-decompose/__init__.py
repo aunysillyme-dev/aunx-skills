@@ -1,4 +1,4 @@
-"""aunx-decompose Hermes plugin — registration."""
+"""Register the aunx-decompose skill and command with Hermes Agent."""
 
 import os
 from pathlib import Path
@@ -31,10 +31,10 @@ def _handle_decompose(raw_args: str) -> str:
 def register(ctx):
     ctx.register_skill(
         "decompose", _PLUGIN_DIR / "skills" / "decompose" / "SKILL.md",
-        description="Split a task into validated steps and parallel waves.",
+        description="Split a task into checkable units and parallel waves.",
     )
     ctx.register_command(
         "decompose", _handle_decompose,
-        description="Split a task into validated steps and parallel waves.",
+        description="Split a task into checkable units and parallel waves.",
         args_hint="<task>",
     )

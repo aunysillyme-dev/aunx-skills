@@ -59,11 +59,11 @@ Plugins are installable bundles for one agent's marketplace. They are separate f
 
 | Plugin | Agent | What it does |
 |---|---|---|
-| [Decompose](plugins/aunx-decompose/README.md) | Claude Code | Split a task into steps, check dependencies, cycles and write-path overlap, and show which steps can run in parallel. Free, MIT. |
+| [Decompose](plugins/aunx-decompose/README.md) | Claude Code | Split a task into the smallest checkable units, check real data edges, clause coverage, cycles and write-path overlap, show parallel waves and the critical path, and flag big maps for an advisor review. Free, MIT. |
 
-### Decompose: split a task into checked steps and parallel waves
+### Decompose: split a task into checked units and parallel waves
 
-Decompose is a free Claude Code plugin that turns a task into a list of steps, checks the list, and shows which steps can run at the same time. Claude writes the plan. A Python helper that uses only the standard library rejects dependency cycles, unknown dependencies, relative write paths and two steps that would write to the same path.
+Decompose is a free Claude Code plugin that turns a task into the smallest units that can each be checked, and shows which units can run at the same time. Claude writes the plan. A Python helper that uses only the standard library rejects dependency cycles, false and missing data edges, clauses of the ask with no unit, relative write paths and overlapping writes. It prints a plan table with waves, the critical path and clause coverage, and flags big or serial maps for an advisor review before models and machines are picked. A written method covers those picks.
 
 **Use it when** a task has several steps, some steps can run in parallel, more than one agent or subagent may edit files, or you want a plan that a script can verify instead of a plan that only reads well.
 
@@ -121,7 +121,7 @@ The instructions keep actions within the request. Retro to Rules requires approv
 
 ### What does the Decompose plugin do?
 
-It splits a task into steps, checks the steps for dependency cycles and for two steps writing to the same path, and shows which steps can run in parallel. The plugin plans work and does not run it. See [Plugins](#plugins).
+It splits a task into small typed units, checks them for dependency cycles, false or missing data edges, uncovered clauses and overlapping writes, and shows which units can run in parallel. The plugin plans work and does not run it. See [Plugins](#plugins).
 
 ### How do I install the Decompose plugin?
 

@@ -69,5 +69,16 @@
     "kinds": [
       "audit"
     ]
+  },
+  "plan_defaults": {
+    "advisor_max_steps": 5,
+    "advisor_min_units": 12,
+    "advisor_serial_min_steps": 4,
+    "advisor_serial_ratio": 0.75,
+    "advisor_min_readers": 3,
+    "high_importance_readers": 3,
+    "agent_fanout_min": 10,
+    "bulk_prompt_min": 2,
+    "subagents_min": 4
   }
 }

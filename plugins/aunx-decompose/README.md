@@ -1,6 +1,20 @@
 # Decompose
 
-Decompose is a Claude Code plugin that breaks a task into checked steps and shows which steps can run in parallel. Claude writes the plan. A Python helper that uses only the standard library validates it: dependency cycles, unknown dependencies, relative write paths and two steps writing to the same path are rejected. Python 3.8+ is enough. No API keys or Python packages needed.
+Decompose is a Claude Code plugin that breaks a task into the smallest units that can each be checked, and shows which units can run at the same time. Claude writes the plan. A Python helper that uses only the standard library checks it. Python 3.8+ is enough. No API keys or Python packages needed.
+
+Version 0.2.0 adds **unit maps**, a fuller planning method:
+
+1. Split the ask into numbered clauses and tag every unit with the clauses it serves. A clause with no unit is flagged.
+2. Break the job into the smallest units, each with its own inputs, outputs and verifier. N similar items become N units.
+3. Give each unit one of 14 types (coding, reasoning, research, writing, four creative types, design, vision, review, data, agentic, cyber) and one of 3 speeds (fast, standard, frontier).
+4. Draw only real data edges: a unit depends on another only when it reads that unit's output. False and missing edges are rejected. Checks that can kill the plan run first.
+5. Build parallel waves, count how many units read each output, and raise importance with that count.
+6. Choose a dispatch shape per group: one call per unit, an agent's own subagents, a bulk prompt fan-out, an agent fan-out, or split worktrees for disjoint writes. The thresholds are tunable defaults.
+7. Send big or serial maps to an advisor review before any picks, and apply its patch (split, cut edges, re-tier, change the shape or the needs) all or nothing.
+8. Pick a model and a machine per unit with a written method: type first, then speed, family spread within a wave, context as a scored key, effort set apart from tier, and the smallest machine that fits.
+9. Print one plan table with the waves, the critical path and clause coverage.
+
+The simpler step plans from 0.1.0 still work unchanged.
 
 ## When to use it
 
@@ -26,7 +40,45 @@ Use `/decompose <task>` (namespaced as `/decompose:decompose` in Claude Code),
 or ask the agent to split a task into steps, plan dependencies, or check write-path
 overlap. The plugin plans work and does not execute the plan.
 
-## Example
+## Unit map example
+
+From `plugins/aunx-decompose` in this repository:
+
+```bash
+python3 skills/decompose/scripts/decompose.py --plan skills/decompose/examples/plan.json
+```
+
+The bundled map compares three CSV libraries on speed and license, then recommends one. Actual output, exit 0 (table trimmed to four rows):
+
+```
+PLAN valid
+
+Advisor review: REQUIRED before picks (S1 read by 3 units)
+
+| unit | parent | clause | type x speed | wave | group | shape | model | machine | runner-up |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| S1 (invalidator) | - | C1 | data x fast | 0 | W0 | single | - | - | - |
+| S3.1 | S3 | C2 | research x fast | 0 | W0 | single | - | - | - |
+| S2.1 | S2 | C1 | coding x standard | 1 | W1 | single | - | - | - |
+| S4 | - | C3 | writing x standard | 2 | - | single | - | - | - |
+
+Waves:
+  W0: S1, S3.1, S3.2, S3.3
+  W1: S2.1, S2.2, S2.3
+  W2: S4
+Critical path (minutes): S1 -> S2.3 -> S4, length 11
+Serial estimate: 29 minutes. Both figures come from the units' own needs.minutes.
+Clause coverage:
+  C1 (compare on speed): S1, S2.1, S2.2, S2.3
+  C2 (compare on license): S3.1, S3.2, S3.3
+  C3 (recommend one): S4
+```
+
+The advisor gate fired because S1 is read by three units. The bundled `patch.json` is a sample review: it splits S4 into a draft and a citation check. Apply it with `--apply-patch skills/decompose/examples/patch.json`. Add `--json` for machine-readable output. The model, machine and runner-up columns stay empty until you pick them by the method in [references/picking.md](skills/decompose/references/picking.md).
+
+Unit map exit codes: `0` valid, `2` every error listed, including unknown types or speeds, clause gaps, false or missing edges, cycles, substeps more than one level deep, and overlapping writes between units that could run at the same time. Dispatch and gate thresholds live under `plan_defaults` in the bundled `recipes.json`; override any of them in your own recipe store.
+
+## Step plan example
 
 From `plugins/aunx-decompose` in this repository, create `CARD.md`:
 
@@ -92,7 +144,7 @@ python3 skills/decompose/scripts/decompose.py --validate "$steps_file" --waves
 python3 skills/decompose/scripts/decompose.py --validate "$steps_file" --save-recipe my-plan
 ```
 
-Exit codes: `0` valid, `2` error, `3` no matching card recipe (a schema is printed
+Step plan exit codes: `0` valid, `2` error, `3` no matching card recipe (a schema is printed
 so Claude can write the steps). Validation checks the required fields, known
 kinds, unique IDs, known dependencies, cycles, absolute write paths, and
 write-path overlap, including parent/child paths, symlink aliases, and existing
@@ -118,7 +170,8 @@ saving again.
 
 - Claude runs one Python 3 script, `skills/decompose/scripts/decompose.py`, on the files you name. It uses only the standard library.
 - It makes no network requests, sends no data anywhere, installs no packages, and starts no other programs. The plugin has no hooks and no MCP servers.
-- It reads the steps or card file you pass and the bundled `recipes.json`.
+- It reads the steps, card, plan or patch file you pass and the bundled `recipes.json`.
+- It never picks or calls a model or a machine. Picking is a written method for the agent.
 - It writes only when you save a recipe: to `$DECOMPOSE_RECIPES` or `~/.claude/decompose/recipes.json`, plus a `.lock` file and a temporary file beside it. It never writes inside the plugin folder.
 - Claude is told to keep its working `steps.json` in a new temporary directory, so it does not overwrite your files.
 
@@ -147,7 +200,15 @@ integrations. Bundled search and fetch steps request `web`.
 
 ### What does Decompose do?
 
-It turns a task into a list of steps with dependencies, checks the list, and prints the steps grouped into parallel waves. It plans work and never runs it.
+It turns a task into small units with dependencies, checks the map, and prints the units grouped into parallel waves with a plan table, a critical path and clause coverage. It plans work and never runs it.
+
+### When does the advisor review fire?
+
+When the map has more than 5 steps, 12 or more units, a nearly serial shape, or a unit read by 3 or more others. These are defaults you can tune.
+
+### Are the speed figures measured?
+
+No. The critical path and serial estimate come from the minutes you put on each unit. The formulas in the picking reference are illustrative and meant to be calibrated against your own runs.
 
 ### Does it send my tasks anywhere?
 
@@ -172,4 +233,10 @@ claude plugin validate plugins/aunx-decompose
 ```
 
 For local use without a marketplace install, launch
-`claude --plugin-dir ./plugins/aunx-decompose` from the repository root. MIT licensed. See [LICENSE](LICENSE).
+`claude --plugin-dir ./plugins/aunx-decompose` from the repository root.
+
+## Credits
+
+The method uses standard techniques: Kahn's topological layering for waves, the critical path method for the longest chain, the work and span bound for the best possible speedup, and the lead-and-workers and parallelization patterns from Anthropic's "Building effective agents". No code was copied. See [CREDITS.md](CREDITS.md).
+
+MIT licensed. See [LICENSE](LICENSE).

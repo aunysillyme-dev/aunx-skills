@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Expand task cards into validated, bounded delegation steps."""
+"""Expand task cards into validated steps, or check a unit map and print its plan."""
 
 import argparse
 import copy
@@ -14,6 +14,9 @@ import tempfile
 import time
 import unicodedata
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import unitmap  # noqa: E402
+
 try:
     import fcntl
 except ImportError:
@@ -24,6 +27,7 @@ RECIPES = Path(__file__).resolve().parents[1] / "recipes.json"
 KINDS = {"frame", "code", "test-run", "audit-needed", "ship", "reproduce",
          "search", "fetch", "extract", "synthesize", "read", "audit"}
 WRITE_KINDS = {"code", "ship"}
+MERGED_KEYS = ("tools_by_kind", "scopes", "plan_defaults")
 INPUTS = {
     "frame": ("ask", "purpose", "scope", "paths"),
     "code": ("ask", "scope", "paths", "conventions", "denied"),
@@ -121,7 +125,7 @@ def read_recipes(path):
     recipes = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(recipes, dict):
         raise ValueError("recipes must be an object: " + str(path))
-    for key in ("tools_by_kind", "scopes"):
+    for key in MERGED_KEYS:
         if key in recipes and not isinstance(recipes[key], dict):
             raise ValueError(key + " must be an object")
     return recipes
@@ -132,7 +136,7 @@ def load_recipes():
     path = user_recipes_path()
     if path.exists():
         for name, recipe in read_recipes(path).items():
-            if name in ("tools_by_kind", "scopes"):
+            if name in MERGED_KEYS:
                 recipes.setdefault(name, {}).update(recipe)
             else:
                 recipes[name] = recipe
@@ -377,10 +381,36 @@ def main(argv=None):
     parser.add_argument("--validate", metavar="STEPS_JSON")
     parser.add_argument("--save-recipe", metavar="NAME")
     parser.add_argument("--waves", action="store_true", help="print JSON arrays of steps in dependency waves")
+    parser.add_argument("--plan", metavar="PLAN_JSON", help="check a unit map and print its plan table")
+    parser.add_argument("--apply-patch", metavar="PATCH_JSON", help="apply an advisor patch to --plan first")
+    parser.add_argument("--json", action="store_true", help="with --plan, print the computed plan as JSON")
     args = parser.parse_args(argv)
     if args.save_recipe and not args.validate:
         parser.error("--save-recipe requires --validate")
+    if args.plan and (args.validate or args.card or args.task or args.waves):
+        parser.error("--plan cannot be combined with a card, --validate or --waves")
+    if (args.apply_patch or args.json) and not args.plan:
+        parser.error("--apply-patch and --json require --plan")
     try:
+        if args.plan:
+            plan = unitmap.normalize(json.loads(Path(args.plan).read_text(encoding="utf-8")))
+            errors = unitmap.validate(plan, same_path, path_inside)
+            if errors:
+                raise ValueError("; ".join(errors))
+            if args.apply_patch:
+                advice = json.loads(Path(args.apply_patch).read_text(encoding="utf-8"))
+                plan = unitmap.apply_patch(plan, advice)
+                errors = unitmap.validate(plan, same_path, path_inside)
+                if errors:
+                    raise ValueError("patch rejected, map unchanged: " + "; ".join(errors))
+            limits = unitmap.defaults(load_recipes().get("plan_defaults"))
+            result = unitmap.compute(plan, limits)
+            if args.json:
+                print(json.dumps({"ask": plan["ask"], "clauses": plan["clauses"],
+                                  "patched": bool(args.apply_patch), **result}, indent=2))
+            else:
+                print(unitmap.table(plan, result, patched=bool(args.apply_patch)))
+            return 0
         if args.validate:
             steps = json.loads(Path(args.validate).read_text(encoding="utf-8"))
             errors = validate(steps)

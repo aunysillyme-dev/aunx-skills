@@ -12,8 +12,8 @@ Skills are standalone SKILL.md folders readable by Claude Code, Codex CLI, Curso
 
 ## Plugins
 
-- [Decompose plugin](https://github.com/aunysillyme-dev/aunx-skills/blob/main/plugins/aunx-decompose/README.md): Claude Code plugin that splits a task into checked steps, rejects dependency cycles and overlapping write paths, and shows parallel waves. Free, MIT.
-- [Decompose skill](https://github.com/aunysillyme-dev/aunx-skills/blob/main/plugins/aunx-decompose/skills/decompose/SKILL.md): How Claude writes a step plan and validates it.
+- [Decompose plugin](https://github.com/aunysillyme-dev/aunx-skills/blob/main/plugins/aunx-decompose/README.md): Claude Code plugin that splits a task into the smallest checkable units, rejects dependency cycles, false or missing data edges, uncovered clauses and overlapping writes, and prints parallel waves, the critical path and an advisor gate. Free, MIT.
+- [Decompose skill](https://github.com/aunysillyme-dev/aunx-skills/blob/main/plugins/aunx-decompose/skills/decompose/SKILL.md): How Claude writes a step plan or a unit map, validates it, and picks a model and machine per unit.
 - [Marketplace manifest](https://github.com/aunysillyme-dev/aunx-skills/blob/main/.claude-plugin/marketplace.json): Marketplace `aunx`. Install with `claude plugin marketplace add aunysillyme-dev/aunx-skills`, then `claude plugin install aunx-decompose@aunx`.
 
 ## Skills
