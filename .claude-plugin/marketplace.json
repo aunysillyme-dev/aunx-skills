@@ -1,10 +1,10 @@
 {
   "name": "aunx",
   "owner": {
-    "name": "Auny LLC"
+    "name": "AunySillyMe"
   },
   "metadata": {
-    "description": "Plugins by Auny LLC for AI coding agents."
+    "description": "Plugins by AunySillyMe for AI coding agents."
   },
   "plugins": [
     {
