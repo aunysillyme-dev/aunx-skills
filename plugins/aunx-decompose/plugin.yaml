@@ -1,0 +1,10 @@
+name: aunx-decompose
+version: 0.1.0
+description: Break a task into checked steps and parallel waves; validates dependencies, cycles and write-path overlap.
+author: AunySillyMe
+license: MIT
+homepage: https://github.com/aunysillyme-dev/aunx-skills/tree/main/plugins/aunx-decompose
+provides_tools: []
+provides_hooks: []
+requires_hermes: ">=0.19"
+tags: [task-decomposition, planning, dependencies, parallel-waves, validation]

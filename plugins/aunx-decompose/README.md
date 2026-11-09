@@ -8,13 +8,22 @@ Use it when a task has several steps, some can run in parallel, more than one ag
 
 ## Install
 
-```bash
+Claude Code:
+
+```
 claude plugin marketplace add aunysillyme-dev/aunx-skills
 claude plugin install aunx-decompose@aunx
 ```
 
+Hermes Agent (from the plugin catalog, once listed):
+
+```
+hermes plugins install aunx-decompose
+hermes plugins enable aunx-decompose
+```
+
 Use `/decompose <task>` (namespaced as `/decompose:decompose` in Claude Code),
-or ask Claude to split a task into steps, plan dependencies, or check write-path
+or ask the agent to split a task into steps, plan dependencies, or check write-path
 overlap. The plugin plans work and does not execute the plan.
 
 ## Example
