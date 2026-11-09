@@ -4,6 +4,8 @@
 
 Ten standalone agent skills for things agents quietly get wrong: lost command output, unchecked numbers, incomplete renames, premature failure claims, and lessons saved as rules too soon.
 
+The repository also hosts **Decompose**, a Claude Code plugin that splits a task into checked steps and parallel waves. See [Plugins](#plugins).
+
 Made by Auny LLC. Four packs are free. Six have individual marketplace prices. The bundle of all six paid skills is **$7.99** on Agensi when published. This public repository contains the skill instructions and source under the [MIT license](LICENSE); a marketplace purchase does not grant exclusive access or change those license rights.
 
 ## Choose a skill
@@ -59,12 +61,24 @@ Plugins are installable bundles for one agent's marketplace. They are separate f
 |---|---|---|
 | [Decompose](plugins/aunx-decompose/README.md) | Claude Code | Split a task into steps, check dependencies, cycles and write-path overlap, and show which steps can run in parallel. Free, MIT. |
 
+### Decompose: split a task into checked steps and parallel waves
+
+Decompose is a free Claude Code plugin that turns a task into a list of steps, checks the list, and shows which steps can run at the same time. Claude writes the plan. A Python helper that uses only the standard library rejects dependency cycles, unknown dependencies, relative write paths and two steps that would write to the same path.
+
+**Use it when** a task has several steps, some steps can run in parallel, more than one agent or subagent may edit files, or you want a plan that a script can verify instead of a plan that only reads well.
+
+**Skip it when** the task is a single step or you only need a prose outline. It works alongside plan mode and to-do lists and does not replace them.
+
+**Privacy.** It runs on your machine. It makes no network requests, sends no data, and has no hooks or MCP servers. It writes only when you save a recipe, to `~/.claude/decompose/recipes.json`.
+
 Install from the Claude Code marketplace in this repository:
 
 ```sh
 claude plugin marketplace add aunysillyme-dev/aunx-skills
 claude plugin install aunx-decompose@aunx
 ```
+
+Then ask Claude to split a task into steps, or run `/aunx-decompose:decompose <task>`.
 
 ## Demos and packaging
 
@@ -104,6 +118,22 @@ Yes. Most packs use your agent's existing file and command tools. Number Guard c
 ### Will a skill edit my rules or file tickets automatically?
 
 The instructions keep actions within the request. Retro to Rules requires approval of specific numbered changes before updating persistent behavior files. Ticket Gate evaluates a candidate before filing and uses artifact evidence before closing.
+
+### What does the Decompose plugin do?
+
+It splits a task into steps, checks the steps for dependency cycles and for two steps writing to the same path, and shows which steps can run in parallel. The plugin plans work and does not run it. See [Plugins](#plugins).
+
+### How do I install the Decompose plugin?
+
+Run `claude plugin marketplace add aunysillyme-dev/aunx-skills`, then `claude plugin install aunx-decompose@aunx`. It needs Claude Code and Python 3.8 or later.
+
+### Does Decompose send my tasks anywhere?
+
+No. It makes no network requests and has no hooks or MCP servers. Your steps are read from files on your machine, and only saved recipes are written, to `~/.claude/decompose/recipes.json`.
+
+### What counts as a conflict between two steps?
+
+Two steps that write to the same file or to a parent and child path, compared without regard to letter case or Unicode form. Decompose rejects the plan and names both steps, so you merge them into one step.
 
 ### Where are creator credits?
 

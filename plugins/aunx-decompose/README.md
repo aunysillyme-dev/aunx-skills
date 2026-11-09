@@ -1,8 +1,10 @@
 # Decompose
 
-Split tasks into steps, check dependencies and write paths, and show what can
-run in parallel. Claude writes the plan; a Python helper validates it. Python
-3.8+ and the standard library are enough. No API keys or Python packages needed.
+Decompose is a Claude Code plugin that breaks a task into checked steps and shows which steps can run in parallel. Claude writes the plan. A Python helper that uses only the standard library validates it: dependency cycles, unknown dependencies, relative write paths and two steps writing to the same path are rejected. Python 3.8+ is enough. No API keys or Python packages needed.
+
+## When to use it
+
+Use it when a task has several steps, some can run in parallel, more than one agent or subagent may edit files, or you want a plan a script can verify. Skip it for a single-step task or a prose outline. It works alongside plan mode and to-do lists and does not replace them.
 
 ## Install
 
@@ -131,6 +133,24 @@ saving again.
 Only `code` and `ship` are write kinds. Their `paths` must be absolute and
 disjoint across steps. Tool names describe required capabilities, not installed
 integrations. Bundled search and fetch steps request `web`.
+
+## Questions
+
+### What does Decompose do?
+
+It turns a task into a list of steps with dependencies, checks the list, and prints the steps grouped into parallel waves. It plans work and never runs it.
+
+### Does it send my tasks anywhere?
+
+No. It makes no network requests and has no hooks or MCP servers. It writes only when you save a recipe.
+
+### What counts as a conflict between two steps?
+
+Two steps that write to the same file, or to a parent and a child path. Paths are compared without regard to letter case or Unicode form. Decompose rejects the plan and names both steps, so you can merge them into one step.
+
+### Which agents does it support?
+
+Claude Code. The helper script is plain Python, so another agent can run it on a steps file, but only the Claude Code plugin is packaged here.
 
 ## Development
 

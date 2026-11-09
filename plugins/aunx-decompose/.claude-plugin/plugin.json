@@ -12,8 +12,12 @@
   "keywords": [
     "claude-code",
     "claude-code-plugin",
+    "task-decomposition",
     "task-planning",
-    "dependencies",
-    "parallelism"
+    "dependency-graph",
+    "parallel-tasks",
+    "agent-planning",
+    "write-path-conflicts",
+    "cycle-detection"
   ]
 }
