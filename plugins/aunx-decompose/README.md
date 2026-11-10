@@ -1,6 +1,10 @@
-# Decompose
+# Decompose (aunx-decompose)
 
-Decompose is a Claude Code plugin that breaks a task into the smallest units that can each be checked, and shows which units can run at the same time. Claude writes the plan. A Python helper that uses only the standard library checks it. Python 3.8+ is enough. No API keys or Python packages needed.
+[![npm](https://img.shields.io/npm/v/aunx-decompose)](https://www.npmjs.com/package/aunx-decompose) [![skills.sh](https://img.shields.io/badge/skills.sh-decompose-3DF07A)](https://skills.sh/aunysillyme-dev/aunx-skills/decompose) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+![A 14-second tour of Decompose: the ask split into clauses, units grouped into parallel waves by real data edges, the checker printing PLAN valid with the advisor gate and critical path, the checks that reject bad plans, and the closing card with the npm install command.](https://raw.githubusercontent.com/aunysillyme-dev/aunx-skills/main/docs/aunx-decompose-trailer.gif)
+
+Decompose is a Claude Code plugin and agent skill that breaks a task into the smallest units that can each be checked, and shows which units can run at the same time. Claude writes the plan. A Python helper that uses only the standard library checks it. Python 3.8+ is enough. No API keys or Python packages needed.
 
 Version 0.2.0 adds **unit maps**, a fuller planning method:
 
@@ -234,7 +238,15 @@ Two steps that write to the same file, or to a parent and a child path. Paths ar
 
 ### Which agents does it support?
 
-Claude Code. The helper script is plain Python, so another agent can run it on a steps file, but only the Claude Code plugin is packaged here.
+Claude Code as a plugin. Hermes Agent packaging is included, and its catalog listing is pending. As a standalone skill from npm or skills.sh, any agent that reads SKILL.md files and can run Python 3.8 can use it, including Codex, Cursor and Gemini CLI. Only Claude Code is tested here.
+
+### How do I install it with npm or skills.sh?
+
+Run `npx aunx-decompose install` to copy the skill to `~/.claude/skills/decompose`, or `npx skills add aunysillyme-dev/aunx-skills --skill decompose` to install it from skills.sh into the agent you pick. Both install the same skill as the plugin.
+
+### How is it different from plan mode or a to-do list?
+
+Plan mode and to-do lists hold a plan. Decompose checks one: a script rejects cycles, false or missing data edges, clauses with no unit and overlapping writes, then computes the waves and the critical path from the units' own data.
 
 ## Development
 

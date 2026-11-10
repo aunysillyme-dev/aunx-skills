@@ -125,7 +125,7 @@ The instructions keep actions within the request. Retro to Rules requires approv
 
 It splits a task into small typed units, checks them for dependency cycles, false or missing data edges, uncovered clauses and overlapping writes, and shows which units can run in parallel. The plugin plans work and does not run it. See [Plugins](#plugins).
 
-### How do I install the Decompose plugin?
+### How do I install the Decompose plugin or skill?
 
 Run `claude plugin marketplace add aunysillyme-dev/aunx-skills`, then `claude plugin install aunx-decompose@aunx`. As a standalone skill, run `npx aunx-decompose install` or `npx skills add aunysillyme-dev/aunx-skills --skill decompose`. It needs Python 3.8 or later.
 
