@@ -31,6 +31,9 @@ NAME = re.compile(r"[A-Za-z0-9_.-]+")
 REQUIRED = ("id", "type", "speed", "clause_ids", "inputs", "outputs", "deps", "paths", "verify")
 OPTIONAL = ("parent_id", "importance", "is_invalidator", "item_count", "dispatch_hint", "needs",
             "irreversible", "context_tokens", "model", "machine", "runner_up", "effort", "note")
+COMPUTED_PLAN_KEYS = {"advisor", "waves", "critical_path", "coverage", "steps", "patched",
+                      "warnings", "questions"}
+COMPUTED_UNIT_KEYS = {"wave", "parallel_group", "downstream_readers", "shape", "shape_reason"}
 NEEDS_NUMBERS = ("cpu", "ram_gb", "disk_gb", "minutes")
 NEEDS_FLAGS = ("gpu", "scale_up", "local_only")
 PATCH_OPS = ("split", "cut_edges", "retier", "dispatch", "needs")
@@ -64,7 +67,7 @@ def normalize(data):
         data = {"units": data}
     if not isinstance(data, dict):
         raise ValueError("plan must be an object or an array of units")
-    extra = set(data) - {"ask", "clauses", "units"}
+    extra = set(data) - {"ask", "clauses", "units"} - COMPUTED_PLAN_KEYS
     if extra:
         raise ValueError("unknown plan field: " + sorted(extra)[0])
     clauses = data.get("clauses")
@@ -91,7 +94,11 @@ def normalize(data):
         raise ValueError("plan needs clauses: the numbered parts of the ask")
     if not clauses:
         raise ValueError("plan needs at least one clause")
-    return {"ask": data.get("ask", ""), "clauses": clauses, "units": data.get("units")}
+    units = data.get("units")
+    if isinstance(units, list):
+        units = [{k: v for k, v in unit.items() if k not in COMPUTED_UNIT_KEYS}
+                 if isinstance(unit, dict) else unit for unit in units]
+    return {"ask": data.get("ask", ""), "clauses": clauses, "units": units}
 
 
 def _unit_errors(unit, errors):
@@ -316,6 +323,7 @@ def compute(plan, limits):
     """Add waves, groups, readers, importance, shapes, the advisor gate and coverage."""
     units = copy.deepcopy(plan["units"])
     readers = Counter(dep for u in units for dep in set(u["deps"]))
+    top = lambda u: u.get("parent_id") or u["id"]
     waves = layers(units)
     for index, wave in enumerate(waves):
         wave.sort(key=lambda u: (not u.get("is_invalidator", False), -readers[u["id"]], u["id"]))
@@ -340,16 +348,38 @@ def compute(plan, limits):
                 unit["shape"], unit["shape_reason"] = _shape([unit], limits)
             else:
                 unit["shape"], unit["shape_reason"] = wave_shape
+        writers = [u for u in wave if u["paths"] and u["shape"] == "single"
+                   and not u.get("dispatch_hint")]
+        if len({top(u) for u in writers}) >= 2:
+            for unit in writers:
+                unit["shape"] = "split-worktrees"
+                unit["shape_reason"] = "%d writers in this wave on disjoint paths" % len(writers)
     ordered = [u for wave in waves for u in wave]
+    critical_path = _critical_path(ordered, waves)
+    path_question = ("Critical path %s (%g %s): which edge on it is not a real data edge "
+                     "or could start from a partial output?" %
+                     (" -> ".join(critical_path["units"]), critical_path["length"],
+                      critical_path["measure"]))
     # Advisor gate.
-    top = lambda u: u.get("parent_id") or u["id"]
     by_id = {u["id"]: u for u in ordered}
     steps = sorted({top(u) for u in ordered})
-    reasons = []
+    reasons, questions = [], []
     if len(steps) > limits["advisor_max_steps"]:
         reasons.append("steps=%d > %g" % (len(steps), limits["advisor_max_steps"]))
+        counts = Counter(top(u) for u in ordered)
+        smallest = sorted(steps, key=lambda s: (counts[s], s))[:2]
+        questions.append(reasons[-1] + ": could the smallest steps, " +
+                         ", ".join("%s (%d units)" % (s, counts[s]) for s in smallest) + " merge?")
     if len(ordered) >= limits["advisor_min_units"]:
         reasons.append("units=%d >= %g" % (len(ordered), limits["advisor_min_units"]))
+        groups = {}
+        for unit in ordered:
+            groups.setdefault((unit["type"], unit["speed"]), []).append(unit["id"])
+        kind, speed = min(groups, key=lambda key: (-len(groups[key]), key))
+        members = sorted(groups[(kind, speed)])
+        questions.append(reasons[-1] + ": largest same type and speed group is " +
+                         "%s x %s (%d units: %s); does item_count fit this work?" %
+                         (kind, speed, len(members), ", ".join(members)))
     if len(steps) >= limits["advisor_serial_min_steps"]:
         step_units = [{"id": s, "deps": sorted({top(by_id[d]) for u in ordered if top(u) == s
                                                 for d in u["deps"]} - {s})} for s in steps]
@@ -357,18 +387,31 @@ def compute(plan, limits):
             depth = len(layers(step_units))
         except ValueError:
             reasons.append("substeps interleave across steps")
+            questions.append("Substeps interleave across %d steps (%s). " %
+                             (len(steps), ", ".join(steps)) + path_question)
         else:
             if depth / len(steps) > limits["advisor_serial_ratio"]:
                 reasons.append("nearly serial: %d step waves for %d steps" % (depth, len(steps)))
+                questions.append(reasons[-1] + ". " + path_question)
     for unit in ordered:
         if unit["downstream_readers"] >= limits["advisor_min_readers"]:
             reasons.append("%s read by %d units" % (unit["id"], unit["downstream_readers"]))
+            tail = "?" if unit.get("is_invalidator") else ", and should it be an invalidator?"
+            questions.append(reasons[-1] + ": is %s verified before its readers start%s" % (unit["id"], tail))
+    inputs = {item for u in ordered for item in u["inputs"]}
+    warnings = ["%s: orphan output %s has no reader" % (u["id"], output)
+                for u in ordered if readers[u["id"]]
+                for output in u["outputs"] if output not in inputs]
+    if reasons and not any(u.get("is_invalidator") for u in ordered):
+        warnings.append("No invalidator: advisor review is REQUIRED for " + "; ".join(reasons))
     coverage = {c: [u["id"] for u in ordered if c in u["clause_ids"]] for c in plan["clauses"]}
     return {
         "units": ordered,
         "waves": [[u["id"] for u in wave] for wave in waves],
-        "critical_path": _critical_path(ordered, waves),
+        "critical_path": critical_path,
         "advisor": {"required": bool(reasons), "reasons": reasons},
+        "warnings": warnings,
+        "questions": questions,
         "coverage": coverage,
         "steps": steps,
     }
@@ -407,6 +450,9 @@ def table(plan, result, patched=False):
     for clause, ids in result["coverage"].items():
         text = plan["clauses"][clause]
         out.append("  %s%s: %s" % (clause, " (" + text + ")" if text else "", ", ".join(ids)))
+    for title, key in (("Warnings:", "warnings"), ("Advisor questions:", "questions")):
+        if result[key]:
+            out += [title, *("  " + item for item in result[key])]
     return "\n".join(out)
 
 
@@ -464,8 +510,12 @@ def apply_patch(plan, advice):
             raise ValueError("split: children must produce every output of " + parent["id"])
         for unit in units:
             if parent["id"] in unit.get("deps", []):
-                feeders = [c["id"] for c in made if set(c["outputs"]) & set(unit["inputs"])]
+                feeders = [c["id"] for c in made if c["type"] == "review" or
+                           set(c["outputs"]) & set(unit["inputs"])]
                 unit["deps"] = [d for d in unit["deps"] if d != parent["id"]] + feeders
+                for child in made:
+                    if child["type"] == "review":
+                        unit["inputs"].extend(o for o in child["outputs"] if o not in unit["inputs"])
         at = index(parent["id"])
         units[at:at + 1] = made
     for op in patch.get("cut_edges", []):
